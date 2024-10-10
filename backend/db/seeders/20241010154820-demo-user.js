@@ -14,16 +14,22 @@ module.exports = {
       {
         email: 'demo@user.io',
         username: 'Demo-lition',
-        hashedPassword: bcrypt.hashSync('password') // notice we store the passwords here using bcrypt's hashSync method, which hashes the passwords for us so that they are not stored as plain text. Passwords should never be stored as plaintext. 
+        firstName: 'Demo',
+        lastName: 'User',
+        hashedPassword: bcrypt.hashSync('password') // notice we store the passwords here using bcrypt's hashSync method, which hashes the passwords for us so that they are not stored as plain text. Passwords should never be stored as plaintext.
       },
       {
         email: 'user1@user.io',
         username: 'FakeUser1',
+        firstName: 'Fake',
+        lastName: 'User1',
         hashedPassword: bcrypt.hashSync('password2')
       },
       {
         email: 'user2@user.io',
         username: 'FakeUser2',
+        firstName: 'Fake',
+        lastName: 'User2',
         hashedPassword: bcrypt.hashSync('password3')
       }
     ], { validate: true });
