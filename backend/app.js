@@ -10,15 +10,15 @@ const { ValidationError } = require('sequelize');
 const { environment } = require('./config');
 const isProduction = environment === 'production';
 
-const routes = require('./routes');
+const routes = require('./routes'); // import from index file in routes directory
 
 const app = express();
 
 app.use(morgan('dev'));
-app.use(cookieParser());
-app.use(express.json());
+app.use(cookieParser()); // access csurf tokens and jwts
+app.use(express.json()); // allows us to read json request bodies
 
-//! Security Middleware =============================================================================================
+//! Security / Global Middleware
 
 if (!isProduction) {
     // enable cors only in development
@@ -45,7 +45,7 @@ if (!isProduction) {
 
 app.use(routes); // Connect all the routes
 
-//! Error Handling ==================================================================================================
+//! Error Handling
 
 //^ Error generating middleware
 

@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-Schema Design Here 
+<img src="./images/bedAndBreakfastSchema.png" alt="database schema" width=1000px>
 
 ## API Documentation
 

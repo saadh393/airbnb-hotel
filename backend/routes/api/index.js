@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
-const { restoreUser } = require("../../utils/auth.js");
+const { restoreUser, requireAuth } = require("../../utils/auth.js");
 
 // Connect restoreUser middleware to the API router
   // If current user session is valid, set req.user to the user in the database
@@ -11,11 +11,15 @@ router.use(restoreUser);
 
 //! Other middlewares need to come AFTER the restoreUser middleware
 
+router.get('/test', requireAuth, (req, res) => {
+  res.json({ message: 'success' }); // route for testing whether we are logged in or not
+});
+
 router.use('/session', sessionRouter);
 
 router.use('/users', usersRouter);
 
-router.post('/test', (req, res) => {
+router.post('/test', (req, res) => { // route for testing POST requests
   res.json({ requestBody: req.body });
 });
 
