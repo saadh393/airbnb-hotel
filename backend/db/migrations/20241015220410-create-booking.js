@@ -1,7 +1,6 @@
-// 'use strict';
-// /** @type {import('sequelize-cli').Migration} */
-
 'use strict';
+
+// /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -10,14 +9,22 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Spots', {
+    await queryInterface.createTable('Bookings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ownerId: {
+      spotId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Spots',
+          key: 'id'
+        }
+      },
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -25,41 +32,12 @@ module.exports = {
           key: 'id'
         }
       },
-      address: {
-        type: Sequelize.STRING(50),
+      startDate: {
+        type: Sequelize.DATE,
         allowNull: false
       },
-      city: {
-        type: Sequelize.STRING(50),
-        allowNull: false
-      },
-      state: {
-        type: Sequelize.STRING(50),
-        allowNull: false
-      },
-      country: {
-        type: Sequelize.STRING(50),
-        allowNull: false
-      },
-      lat: {
-        type: Sequelize.DECIMAL,
-        allowNull: false
-      },
-      lng: {
-        type: Sequelize.DECIMAL,
-        allowNull: false
-      },
-      name: {
-        type: Sequelize.STRING(50),
-        allowNull: false,
-        unique: true
-      },
-      description: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      price: {
-        type: Sequelize.DECIMAL,
+      endDate: {
+        type: Sequelize.DATE,
         allowNull: false
       },
       createdAt: {
@@ -74,8 +52,9 @@ module.exports = {
       }
     }, options);
   },
+
   async down(queryInterface, Sequelize) {
-    options.tableName = "Spots";
+    options.tableName = "Bookings";
     return queryInterface.dropTable(options);
   }
 };
