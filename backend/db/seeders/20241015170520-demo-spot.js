@@ -58,7 +58,7 @@ module.exports = {
         description: "Home Also",
         price: 500
       }
-    ])
+    ], { validate: true });
   },
 
   async down (queryInterface, Sequelize) {
