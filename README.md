@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-<img src="./images/bedAndBreakfastSchema.png" alt="database schema" width=1000px>
+<img src="./images/final_b&b_schema.png" alt="database schema" width=1000px>
 
 ## API Documentation
 
@@ -50,7 +50,7 @@ Returns the information about the current user that is logged in.
 * Require Authentication: false
 * Request
   * Method: GET
-  * Route path: api/users/:userId
+  * Route path: /api/session
   * Body: none
 
 * Successful Response when there is a logged in user
@@ -91,11 +91,7 @@ information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * Route path: api/session <br>
-  <br>
-  ***Notice that the route path here is 'session' because the act of 'logging in' essentially establishes a user session. This means that a user is authenticated and will maintain a logged-in state. When we log in, we are creating a session for that user which allows them to interact wit hthe application as an authenticated user. This is why the endpoing is called 'session'.*** <br>
-  *Also note that to log out a user, we will DELETE the api/session.* <br>
-  <br>
+  * Route path: /api/session
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -161,10 +157,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * Route path: api/users <br>
-  <br>
-  ***Note that signing up a new user ALSO logs that user in and returns returns a response that includes that user's information, just like when we log in a user via the endpoint above this one. When the user signs up, the first thing that happens is that their details are stored in the database. Once stored, the server will generate a session for them, which might involve creating a session token or cookie. Then the server sends a response which include's the user's information (just like when we log in an existing user). That makes this an all-in-one process where signing up not only registers the user but ALSO logs them in.*** <br>
-  <br>
+  * Route path: /api/users
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -243,7 +236,7 @@ Returns all the spots.
 <br>
 * Request
   * Method: GET
-  * Route path: api/spots
+  * Route path: /api/spots
   * Body: none
 
 * Successful Response
@@ -283,10 +276,7 @@ Returns all the spots owned (created) by the current user.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: api/users/:userId/spots <br>
-  <br>
-  ***Note the use of the ':userId' request parameter instead of ':id' here because we want to clarify that this id belongs to the user (as opposed to the owner or the spot, both of which have their own id's).*** <br>
-  <br>
+  * Route path: /api/spots/current
   * Body: none
 
 * Successful Response
@@ -326,7 +316,7 @@ Returns the details of a spot specified by its id.
 * Require Authentication: false
 * Request
   * Method: GET
-  * Route path: api/spots/:spotId
+  * Route path: /api/spots/:spotId
   * Body: none
 
 * Successful Response
@@ -391,7 +381,7 @@ Creates and returns a new spot.
 * Require Authentication: true
 * Request
   * Method: POST
-  * Route path: api/spots <br>
+  * Route path: /api/spots <br>
   <br>
   ***This endpoint will create a new record in our 'Spots' table using the data provided in the request body.*** <br>
   <br>
@@ -471,10 +461,7 @@ Create and return a new image for a spot specified by id.
 <br>
 * Request
   * Method: POST
-  * Route path: api/spots/:spotId/images <br>
-  <br>
-  ***Notice here that we use POST, not PUT or PATCH, because we are creating a new resource (the image) associated with a specific spot, adding it to that spot which alreading exists.*** <br>
-  <br>
+  * Route path: /api/spots/:spotId/images
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -519,11 +506,8 @@ Updates and returns an existing spot.
 * Require Authentication: true
 * Require proper authorization: Spot must belong to the current user
 * Request
-  * Method: PUT <br>
-  <br>
-  ***Notice the user of the PUT method, instead of PATCH, since we are potentially updating every attribute on the given spot.*** <br>
-  <br>
-  * Route path: api/spots/:spotId
+  * Method: PUT
+  * Route path: /api/spots/:spotId
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -609,7 +593,7 @@ Deletes an existing spot.
 * Require proper authorization: Spot must belong to the current user
 * Request
   * Method: DELETE
-  * Route path: api/spots/:spotId
+  * Route path: /api/spots/:spotId
   * Body: none
 
 * Successful Response
@@ -645,7 +629,7 @@ Returns all the reviews written by the current user.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: api/users/:userId/reviews
+  * Route path: /api/reviews/current
   * Body: none
 
 * Successful Response
@@ -701,7 +685,7 @@ Returns all the reviews that belong to a spot specified by id.
 * Require Authentication: false
 * Request
   * Method: GET
-  * Route path: api/spots/:spotId/reviews
+  * Route path: /api/spots/:spotId/reviews
   * Body: none
 
 * Successful Response
@@ -756,7 +740,7 @@ Create and return a new review for a spot specified by id.
 * Require Authentication: true
 * Request
   * Method: POST
-  * Route path: api/spots/:spotId/reviews
+  * Route path: /api/spots/:spotId/reviews
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -834,10 +818,7 @@ Create and return a new image for a review specified by id.
 * Require proper authorization: Review must belong to the current user
 * Request
   * Method: POST
-  * Route path: api/reviews/:reviewId/images <br>
-  <br>
-  ***Notice that here we can access the review directly because each review has its own ID. And we do not need to access the userId in the endpoint (like this, for example: api/users/:userId/reviews/:reviewId) because this endpoint requires authentication, which means that we're already checking to verify that the given review belongs to the current user before they are able to access this endpoint anyway.*** <br>
-  <br>
+  * Route path: /api/reviews/:reviewId/images
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -894,7 +875,7 @@ Update and return an existing review.
 * Require proper authorization: Review must belong to the current user
 * Request
   * Method: PUT
-  * Route path: api/reviews/:reviewId
+  * Route path: /api/reviews/:reviewId
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -960,7 +941,7 @@ Delete an existing review.
 * Require proper authorization: Review must belong to the current user
 * Request
   * Method: DELETE
-  * Route path: api/reviews/:reviewId
+  * Route path: /api/reviews/:reviewId
   * Body: none
 
 * Successful Response
@@ -996,10 +977,7 @@ Return all the bookings that the current user has made.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: api/bookings/current <br>
-  <br>
-  ***Notice that we don't use api/users/:userId/bookings, but streamline this route by using api/bookings/current instead. This works because 'current' route is tailored specifically to ONLY return resources related to the currently authenticated user. Authentication is already required to access this endpoint.*** <br>
-  <br>
+  * Route path: /api/bookings/current
   * Body: none
 
 * Successful Response
@@ -1044,7 +1022,7 @@ Return all the bookings for a spot specified by id.
 * Require Authentication: true
 * Request
   * Method: GET
-  * Route path: api/spots/:spotId/bookings
+  * Route path: /api/spots/:spotId/bookings
   * Body: none
 
 * Successful Response: If you ARE NOT the owner of the spot.
@@ -1112,7 +1090,7 @@ Create and return a new booking from a spot specified by id.
 * Require proper authorization: Spot must NOT belong to the current user
 * Request
   * Method: POST
-  * Route path: api/spots/:spotId/bookings
+  * Route path: /api/spots/:spotId/bookings
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1194,9 +1172,7 @@ Update and return an existing booking.
 * Require proper authorization: Booking must belong to the current user
 * Request
   * Method: PATCH
-  * Route path: api/bookings/:bookingId <br>
-  <br>
-  ***Notice that we use PATCH instead of PUT because we can see (based on the request body below) that we are only updating the 'startDate' and 'endDate' properties of the specified booking. We use PATCH becaues it is meant to be used for partial updates.***
+  * Route path: /api/bookings/:bookingId
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1291,7 +1267,7 @@ Delete an existing booking.
   Spot must belong to the current user
 * Request
   * Method: DELETE
-  * Route path: api/bookings/:bookingId
+  * Route path: /api/bookings/:bookingId
   * Body: none
 
 * Successful Response
@@ -1340,7 +1316,7 @@ Delete an existing image for a Spot.
 * Require proper authorization: Spot must belong to the current user
 * Request
   * Method: DELETE
-  * Route path: api/images/:imageId
+  * Route path: /api/spot-images/:imageId
   * Body: none
 
 * Successful Response
@@ -1375,7 +1351,7 @@ Delete an existing image for a Review.
 * Require proper authorization: Review must belong to the current user
 * Request
   * Method: DELETE
-  * Route path: api/images/:imageId
+  * Route path: /api/review-images/:imageId
   * Body: none
 
 * Successful Response
