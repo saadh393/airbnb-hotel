@@ -7,6 +7,8 @@ const express = require('express');
 const { Spot, Review, SpotImage } = require('../../db/models');
 const router = express.Router();
 
+//! GET ALL SPOTS
+
 router.get("/", async (req, res, next) => {
 
     // res.send("get-all-spots-test"); //! Test response
@@ -58,5 +60,61 @@ router.get("/", async (req, res, next) => {
         next(err);
     }
 });
+
+//! GET DETAILS OF A SPOT FROM AN ID
+
+router.get('/:spotId', async (req, res, next) => {
+
+    try {
+
+        const id = req.params.spotId; // destructure the request parameters to extract the spotId
+
+        const spot = await Spot.findByPk(id, { // Here we search for a specific spot using its id (which is its primary key, hence the .findByPk method)
+
+            include: [ // We also want to include the Review and SpotImage models in our query because we need the 'stars' attribute of the Reviews corresponding to this spot as well as the 'url' of the first SpotImage corresponding to this spot in order to calculate the avgRating and determine the previewImage for the spot.
+                {
+                    model: Review,
+                    attributes: ['stars']
+                },
+                {
+                    model: SpotImage,
+                    attributes: ['url']
+                }
+            ]
+        });
+
+        if (!spot) { // If the spot does not exist...
+            return res.status(404).json({ message: "Spot couldn't be found" }); // ...return a json response with the message "Spot couldn't be found" and an error code of 404, per the API documentation
+        }
+
+        const spotData = spot.toJSON(); // convert our spot into a POJO
+
+        const avgRating = spotData.Reviews && spotData.Reviews.length > 0 // Check to see if Reviews exists and make sure that it isn't empty
+
+            ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length // If there are reviews, we use the reduce method to add up all of the stars from all of the reviews corresponding to the current spot, then divide that number by the total number of reviews in order to get the average rating.
+
+            : 0; // If there are not reviews, then we set the average rating to 0.
+
+        const previewImage = spotData.SpotImages && spotData.SpotImages.length > 0 // Here we check to see that SpotImages exists and that there is at least one image corresponding to the current spot.
+
+            ? spotData.SpotImages[0].url // If there is at least one image for the current spot, we set previewImage equal to the url of the first image for this spot.
+
+            : null; // Otherwise, if there are no images for the current spot, we set previewImage to null.
+
+        delete spotData.SpotImages; // Delete the .SpotImages and .Reviews properties from spotData because we don't need it in the response (per our API docs)
+        delete spotData.Reviews;
+
+        const spotDetails = { // Use the spread operator to include all of the properties from our spotData (the details of the current spot) into our new object, 'spotDetails'
+            ...spotData,
+            avgRating, // then we add the avgRating and previewImage properties to our new 'spotDetails' object as well
+            previewImage
+        };
+
+        res.json(spotDetails) // Finally, we return the spotDetails as a JSON response
+
+    } catch (err) { // We also wrapped our code in a try-catch block so that we can handle any errors that occur and pass them to the next() error-handler.
+        next(err)
+    }
+})
 
 module.exports = router;
