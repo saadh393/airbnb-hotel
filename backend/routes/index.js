@@ -22,6 +22,6 @@ router.get("/api/csrf/restore", (req, res) => {
   });
 // ...
 
-router.use('/api', apiRouter);
+router.use('/api', apiRouter); // ALL routes for this entire project begin with "/api"
 
 module.exports = router;
