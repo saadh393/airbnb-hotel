@@ -1,6 +1,6 @@
 'use strict';
 
-const { Booking, Spot, User } = require('../models');
+const { Booking } = require('../models');
 
 let options = {};
 
@@ -20,34 +20,22 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-
-    const spots = await Spot.findAll({
-      attributes: ['id']
-    });
-
-    const users = await User.findAll({
-      attributes: ['id']
-    });
-
-    const spotIds = spots.map(spot => spot.id);
-    const userIds = users.map(user => user.id);
-
     await Booking.bulkCreate([
       {
-        spotId: spotIds[0],
-        userId: userIds[0],
+        spotId: 1,
+        userId: 1,
         startDate: "2021-11-19",
         endDate: "2021-11-20"
       },
       {
-        spotId: spotIds[1],
-        userId: userIds[1],
+        spotId: 2,
+        userId: 2,
         startDate: "2021-11-19",
         endDate: "2021-11-20"
       },
       {
-        spotId: spotIds[2],
-        userId: userIds[2],
+        spotId: 3,
+        userId: 3,
         startDate: "2021-11-19",
         endDate: "2021-11-20"
       }
