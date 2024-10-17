@@ -1,6 +1,6 @@
 'use strict';
 
-const { SpotImage } = require('../models');
+const { SpotImage, Spot } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -20,19 +20,25 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const spots = await Spot.findAll({
+      attributes: ['id']
+    })
+
+    const spotIds = spots.map(spot => spot.id)
+
     await SpotImage.bulkCreate([
       {
-        spotId: 1,
+        spotId: spotIds[0],
         url: "https://c.pxhere.com/photos/84/3b/cat_long_haired_cat_stubentieger_pet_blue_eye-1235432.jpg!d",
         preview: true
       },
       {
-        spotId: 2,
+        spotId: spotIds[1],
         url: "https://th.bing.com/th/id/R.8e4ceca837f3c0ea996c744e2bc308a4?rik=4Q7cUWyUjTk4aQ&pid=ImgRaw&r=0",
         preview: true
       },
       {
-        spotId: 3,
+        spotId: spotIds[2],
         url: "https://th.bing.com/th/id/R.abc16624e89e4210216c964211eff5a8?rik=F3urLBKZuB8c4g&pid=ImgRaw&r=0",
         preview: true
       }
