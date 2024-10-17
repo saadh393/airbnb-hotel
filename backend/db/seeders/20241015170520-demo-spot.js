@@ -1,6 +1,6 @@
 'use strict';
 
-const { Spot, User } = require('../models');
+const { Spot } = require('../models');
 // const bcrypt = require("bcryptjs"); // shouldn't need because we're not handling any passwords or information that needs to be hashed/encoded
 
 let options = {};
@@ -21,15 +21,9 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    const users = await User.findAll({
-      attributes: ['id']
-    })
-
-    const userIds = users.map(user => user.id);
-
     await Spot.bulkCreate([
       {
-        ownerId: userIds[0],
+        ownerId: 1,
         address: "123 Disney Lane",
         city: "San Francisco",
         state: "California",
@@ -41,7 +35,7 @@ module.exports = {
         price: 123
       },
       {
-        ownerId: userIds[1],
+        ownerId: 2,
         address: "611 McAnnelly Ave",
         city: "Devine",
         state: "Texas",
@@ -53,7 +47,7 @@ module.exports = {
         price: 250
       },
       {
-        ownerId: userIds[2],
+        ownerId: 3,
         address: "7613 Sugar Maple Ct",
         city: "Tyler",
         state: "Texas",
