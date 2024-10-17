@@ -53,7 +53,7 @@ module.exports = {
         price: 250
       },
       {
-        ownerId: userIds[3],
+        ownerId: userIds[2],
         address: "7613 Sugar Maple Ct",
         city: "Tyler",
         state: "Texas",
