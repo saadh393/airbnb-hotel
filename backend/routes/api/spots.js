@@ -7,7 +7,7 @@ const express = require('express');
 const { Spot, Review, SpotImage } = require('../../db/models');
 const router = express.Router();
 
-//! GET ALL SPOTS 
+//! GET ALL SPOTS
 
 router.get("/", async (req, res, next) => {
 
