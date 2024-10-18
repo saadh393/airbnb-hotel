@@ -24,17 +24,17 @@ module.exports = {
     await SpotImage.bulkCreate([
         {
           spotId: 1,
-          url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.britannica.com%2Fanimal%2Fcat&psig=AOvVaw1o4RC8PajXmUPUynUIUocH&ust=1729373599554000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDar7zxmIkDFQAAAAAdAAAAABAE",
+          url: "https://www.google.com/url?sa=i&url=https%3A%2F%2F",
           preview: true
         },
         {
           spotId: 1,
-          url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.four-paws.org%2Fcampaigns-topics%2Ftopics%2Fcompanion-animals%2F10-facts-about-cats&psig=AOvVaw1o4RC8PajXmUPUynUIUocH&ust=1729373599554000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDar7zxmIkDFQAAAAAdAAAAABAJ",
+          url: "https://www.google.com/url",
           preview: false
         },
         {
           spotId: 2,
-          url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Ficatcare.org%2Fadvice%2Fthinking-of-getting-a-cat%2F&psig=AOvVaw1o4RC8PajXmUPUynUIUocH&ust=1729373599554000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDar7zxmIkDFQAAAAAdAAAAABAf",
+          url: "https://www.google.com/url?sa=i&url=",
           preview: true
         }
     ])
