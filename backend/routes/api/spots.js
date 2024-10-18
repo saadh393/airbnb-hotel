@@ -122,7 +122,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
         // return spotDetails as a json response
 
-        res.json({ spots: spotList })
+        res.json({ Spots: spotList })
 
     } catch (err) {
         next(err);
@@ -146,7 +146,12 @@ router.get('/:spotId', async (req, res, next) => {
                 },
                 {
                     model: SpotImage,
-                    attributes: ['url']
+                    attributes: ['id', 'url', 'preview']
+                },
+                {
+                    model: User,
+                    as: "Owner",
+                    attributes: ['id', 'firstName', 'lastName']
                 }
             ]
         });
@@ -154,6 +159,8 @@ router.get('/:spotId', async (req, res, next) => {
         if (!spot) { // If the spot does not exist...
             return res.status(404).json({ message: "Spot couldn't be found" }); // ...return a json response with the message "Spot couldn't be found" and an error code of 404, per the API documentation
         }
+
+        // console.log(spot); //! For testing
 
         const spotData = spot.toJSON(); // convert our spot into a POJO
 
@@ -163,19 +170,16 @@ router.get('/:spotId', async (req, res, next) => {
 
             : 0; // If there are not reviews, then we set the average rating to 0.
 
-        const previewImage = spotData.SpotImages && spotData.SpotImages.length > 0 // Here we check to see that SpotImages exists and that there is at least one image corresponding to the current spot.
 
-            ? spotData.SpotImages[0].url // If there is at least one image for the current spot, we set previewImage equal to the url of the first image for this spot.
+        const numReviews = spotData.Reviews.length;
 
-            : null; // Otherwise, if there are no images for the current spot, we set previewImage to null.
-
-        delete spotData.SpotImages; // Delete the .SpotImages and .Reviews properties from spotData because we don't need it in the response (per our API docs)
         delete spotData.Reviews;
 
         const spotDetails = { // Use the spread operator to include all of the properties from our spotData (the details of the current spot) into our new object, 'spotDetails'
             ...spotData,
+            numReviews,
             avgRating, // then we add the avgRating and previewImage properties to our new 'spotDetails' object as well
-            previewImage
+            // previewImage
         };
 
         res.json(spotDetails) // Finally, we return the spotDetails as a JSON response
