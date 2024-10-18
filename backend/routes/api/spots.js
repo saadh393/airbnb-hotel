@@ -66,21 +66,68 @@ router.get("/", async (req, res, next) => {
 
 router.get('/current', requireAuth, async (req, res, next) => {
 
-    // res.send("Spots-owned-by-current-user")
+    // res.send("Spots-owned-by-current-user") //* Test Route
 
-    let userId = req.user.id;
+    // Get the current user
 
-    console.log(userId);
+    const userId = req.user.id;
 
-    const spots = await Spot.findAll({
-        where: {
-            ownerId: userId
-        }
-    })
+    try {
 
-    res.json(spots)
+        // Get the spots belonging to the current user
 
-})
+        const spots = await Spot.findAll({
+
+            where: {
+                ownerId: userId
+            },
+
+            include: [
+                {
+                    model: Review,
+                    attributes: ['stars']
+                },
+                {
+                    model: SpotImage,
+                    attributes: ['url']
+                }
+            ]
+        });
+
+        // Map through each spot, calculate avgRating and fetch previewImage
+
+        const spotList = spots.map(spot => {
+
+            const spotData = spot.toJSON();
+
+            const avgRating = spotData.Reviews && spotData.Reviews.length > 0
+
+                ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length
+
+                : 0;
+
+            const previewImage = spot.SpotImages[0] ? spot.SpotImages[0].url : null;
+
+            delete spotData.SpotImages;
+            delete spotData.Reviews
+
+            // combine each spot with avgRating and previewImage to create spotDetails
+
+            return {
+                ...spotData,
+                avgRating,
+                previewImage
+            };
+        });
+
+        // return spotDetails as a json response
+
+        res.json({ spots: spotList })
+
+    } catch (err) {
+        next(err);
+    };
+});
 
 //! GET DETAILS OF A SPOT FROM AN ID
 
