@@ -4,7 +4,8 @@ const express = require('express');
 // const { handleValidationErrors } = require('../../utils/validation');
 // const { setTokenCookie, requireAuth } = require('../../utils/auth');
 
-const { Spot, Review, SpotImage } = require('../../db/models');
+const { Spot, Review, SpotImage, User } = require('../../db/models');
+const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
 //! GET ALL SPOTS
@@ -61,6 +62,26 @@ router.get("/", async (req, res, next) => {
     }
 });
 
+//! GET ALL SPOTS OWNED BY THE CURRENT USER
+
+router.get('/current', requireAuth, async (req, res, next) => {
+
+    // res.send("Spots-owned-by-current-user")
+
+    let userId = req.user.id;
+
+    console.log(userId);
+
+    const spots = await Spot.findAll({
+        where: {
+            ownerId: userId
+        }
+    })
+
+    res.json(spots)
+
+})
+
 //! GET DETAILS OF A SPOT FROM AN ID
 
 router.get('/:spotId', async (req, res, next) => {
@@ -115,6 +136,8 @@ router.get('/:spotId', async (req, res, next) => {
     } catch (err) { // We also wrapped our code in a try-catch block so that we can handle any errors that occur and pass them to the next() error-handler.
         next(err)
     }
-})
+});
+
+
 
 module.exports = router;
