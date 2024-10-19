@@ -195,13 +195,30 @@ router.post("/", requireAuth, async (req, res, next) => {
 
     try {
 
+        const ownerId = req.user.id;
+
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
 
-        console.log(req.body)
+        // res.json(req.body); //! For testing
+
+        const newSpot = await Spot.create({
+            ownerId,
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        });
+
+        res.status(201).json(newSpot);
 
     } catch(err) {
         next(err);
     };
 });
 
-module.exports = router; 
+module.exports = router;
