@@ -39,11 +39,13 @@
 
 - This route requires authentication
 
+- Error Handling: Consider adding error-handling to the migration and model files by using constraints and validations, instead of trying to create a new error-handler or create the errors manually in route handler.
+
 #### Plan
 
 1. authenticate user
 2. retrieve data from request body, save to variable
-3. 
+3.
 
 #### Setup
 
