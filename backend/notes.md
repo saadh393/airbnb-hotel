@@ -2,7 +2,7 @@
 
 ## Questions
 
-- A dev branch already exists in my github repo, but Raihan isn't able to pull that branch or access it. Should he create his own dev branch on his end? Or is there a way that he can access the same dev branch that I"m working on? 
+- ~~A dev branch already exists in my github repo, but Raihan isn't able to pull that branch or access it. Should he create his own dev branch on his end? Or is there a way that he can access the same dev branch that I"m working on~~?
 
 - ~~Rahan pulled my repo and doesn't have a .env file (I'm assuming because it's in my .gitignore). How should we handle this?~~
 
@@ -12,7 +12,7 @@
 
 ## Notes
 
-### Change DEFAULT CHARACTER LENGTH of URL ATTRIBUTE on SpotImages MIGRATION FILE:
+### ~~Change DEFAULT CHARACTER LENGTH of URL ATTRIBUTE on SpotImages MIGRATION FILE~~:
 
 
     Eventually we need to modify character length property of the 'URL' attribute in the SpotImage migration file.
@@ -29,7 +29,7 @@
 
     After we've dropped the database following modification of the migration file, manually re-deploy the bed-and-breakfast web service using the 'Clear build cache and deploy' command from the Render.com GUI.
 
-## Plans
+## Goals
 
 ### Route: Create A Spot
 
@@ -39,7 +39,13 @@
 
 - This route requires authentication
 
-#### Code
+#### Plan
+
+1. authenticate user
+2. retrieve data from request body, save to variable
+3. 
+
+#### Setup
 
 ```js
 router.post("/", requireAuth, async (req, res, next) => {
