@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     stars: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      Validate: {
+      validate: {
         min: {
           args: [0],
           msg: 'Stars must be at least 0'
