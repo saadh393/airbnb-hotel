@@ -2,8 +2,9 @@
 
 ## Questions
 
+- A dev branch already exists in my github repo, but Raihan isn't able to pull that branch or access it. Should he create his own dev branch on his end? Or is there a way that he can access the same dev branch that I"m working on? 
 
-- Rahan pulled my repo and doesn't have a .env file (I'm assuming because it's in my .gitignore). How should we handle this?
+- ~~Rahan pulled my repo and doesn't have a .env file (I'm assuming because it's in my .gitignore). How should we handle this?~~
 
 - ~~With respect to 'get Spot by userId' how can we alias 'User' to be 'Owner' as it is in the example res~~
 
@@ -45,7 +46,7 @@ router.post("/", requireAuth, async (req, res, next) => {
 
     try {
 
-        
+
 
     } catch(err) {
         next(err);
