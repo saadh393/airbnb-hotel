@@ -1,0 +1,391 @@
+QUESTIONS:
+
+WIth respect to 'get Spot by userId' how can we alias 'User' to be 'Owner' as it is in the example res
+
+Is it better to switch Render.com settings to show recent changes to 'Dev' instead of 'Main' since we are primarily working in the Dev branch? If we keep Render.com on the main branch, we have to push to main before we can test anything live.
+
+Rahan pulled my repo and doesn't have a .env file (I'm assuming because it's in my .gitignore). How should we handle this?
+
+=======================================================================================================================
+
+NOTES:
+
+CHANGING DEFAULT CHARACTER LENGTH OF URL ATTRIBUTE ON SpotImages MIGRATION FILE:
+
+    Eventually we need to modify character length property of the URL 'attribute' in the SpotImage migration file.
+
+    Right now, in our live environment, SpotImage seeding will fail if the URL is longer than 250 characters. This is very limiting, and we need to change it before the end of the project.
+
+    Right now we have a constraint on the model file, but not on the migration file. Maybe adding the (2048) to replace the default (250) character limit on the migration file will fix this.
+
+    In order to make that change, we first need to modify the migration file. After that, we need to manually drop the database on Render so that it will re-build the database using the updated migration file. Here is the command to
+
+    The command to open the PostgreSQL Database in our terminal is: PGPASSWORD=bpBTOrAC90SK9bmz7icVIeVnBspsvFPl psql -h dpg-cs2mmr0gph6c738688fg-a.oregon-postgres.render.com -U app_academy_projects_hlgc_user app_academy_projects_hlgc
+
+    The command to drop the Database is: DROP SCHEMA bed_and_breakfast_schema CASCADE;
+
+    After we've dropped the database following modification of the migration file, manually re-deploy the bed-and-breakfast web service using the 'Clear build cache and deploy' command from the Render.com GUI.
+
+=======================================================================================================================
+
+CREATE A SPOT ROUTE
+
+    NOTES
+
+recall that '/api/spots' is the default route for the spots router. So if we want to post to '/api/spots' we need only post to '/' in practice.
+
+This route requires authentication
+
+    CODE
+
+router.post("/", requireAuth, async (req, res, next) => {
+    try {
+
+
+
+    } catch (err) {
+        next(err);
+    }
+});
+
+========================================================================================================================
+
+CREATE NEW SPOTIMAGES SEEDER
+
+GIT SETUP
+    git branch (check branch)
+    git checkout dev
+    git checkout -b add-extra-spotImages-seeds
+
+    git add .
+    git commit -m "message"
+    git push origin add-extra-spotImages-seeds
+
+    git checkout dev
+    git merge add-extra-spotImages-seeds
+
+    PR from Github (for push to main)
+
+npx sequelize-cli seed:generate --name demo-spotImage-extras
+
+URLs:
+
+1. https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.britannica.com%2Fanimal%2Fcat&psig=AOvVaw1o4RC8PajXmUPUynUIUocH&ust=1729373599554000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDar7zxmIkDFQAAAAAdAAAAABAE
+2. https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.four-paws.org%2Fcampaigns-topics%2Ftopics%2Fcompanion-animals%2F10-facts-about-cats&psig=AOvVaw1o4RC8PajXmUPUynUIUocH&ust=1729373599554000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDar7zxmIkDFQAAAAAdAAAAABAJ
+3. https://www.google.com/url?sa=i&url=https%3A%2F%2Ficatcare.org%2Fadvice%2Fthinking-of-getting-a-cat%2F&psig=AOvVaw1o4RC8PajXmUPUynUIUocH&ust=1729373599554000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDar7zxmIkDFQAAAAAdAAAAABAf
+
+=======================================================================================================================
+
+CREATE SPOTS TABLE
+
+npx sequelize-cli model:generate --name spot --attributes ownerId:integer,address:string,city:string,state:string,country:string,lat:decimal,lng:decimal,name:string,price:decimal,createdAt:dates,updatedAt:date
+
+add database-level and model-level constraints to migration and model file
+
+npx dotenv sequelize-cli db:migrate
+
+add foreign key (spots table)
+    ownerId: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
+    }
+add associations (both ends) one (user) --> many (spots)
+
+    spots 'belongsTo' users
+
+        static associate(models) {
+            Spot.belongsTo(
+                models.User,
+                {foreignKey: 'userId'}
+            )
+        }
+
+    users 'hasMany' spots
+
+        static associate(models) {
+            User.hasMany(
+                models.Spot,
+                {foreignKey: 'userId', onDelete: 'CASCADE'}
+            )
+        }
+
+npx sequelize-cli seed:generate --name demo-spot
+
+add demo spots to seeder file (take basic syntax from 'demo-user' seeder file, then use 'create a spot' request body from API docs in README to create 3 test spots)
+
+npx dotenv sequelize-cli db:seed:all
+
+NOTE: Database on Render.com crashed following addition of 'createdAt' and 'updatedAt' attributes. Render event log says that there was an internal system error, and that their team has been notified.
+
+========================================================================================================================
+
+CREATE SpotImages TABLE
+
+npx sequelize-cli model:generate --name SpotImage --attributes spotId:integer,url:string,preview:boolean
+
+add database-level and model-level constraints to migration and model files
+    For 'url':
+    url: {
+        type: DataTypes.STRING(2048),
+        allowNull: false,
+        validate: {
+            isUrl: true
+        }
+    }
+
+add foreign key
+    spotId: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: 'Spots',
+            key: 'id'
+        }
+    }
+add associations (both ends) one (spot) --> many (images)
+spots 'belongsTo' users
+
+        static associate(models) {
+            SpotImage.belongsTo(
+                models.Spot,
+                {foreignKey: 'spotId'}
+            )
+        }
+
+    users 'hasMany' spots
+
+        static associate(models) {
+            Spot.hasMany(
+                models.SpotImage,
+                {foreignKey: 'spotId', onDelete: 'CASCADE'}
+            )
+        }
+
+npxx dotenv sequelize-cli db:migrate
+
+npx sequelize-cli seed:generate --name demo-spotImage
+
+npx dotenv sequelize-cli db:seed:all
+
+========================================================================================================================
+
+CREATE Bookings TABLE
+
+npx sequelize-cli model:generate --name Booking --attributes spotId:integer,userId:integer,startDate:date,endDate:date
+
+add database-level and model-level constraints
+
+add foreign key
+    spotId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Spots',
+            key: 'id'
+        }
+    }
+    userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
+    }
+
+add associations
+
+    one (spot) --> many (bookings)
+
+    static associate(models) {
+            Booking.belongsTo(
+                models.Spot,
+                {foreignKey: 'spotId'}
+            )
+        }
+    static associate(models) {
+            Spot.hasMany(
+                models.Bookings,
+                {foreignKey: 'spotId'}
+            )
+        }
+
+    one (user) --> many (bookings)
+
+    static associate(models) {
+            Bookings.belongsTo(
+                models.User,
+                {foreignKey: 'userId'}
+            )
+        }
+    static associate(models) {
+            User.hasMany(
+                models.Booking,
+                {foreignKey: 'userId'}
+            )
+        }
+
+run migrations
+
+npx sequelize-cli seed:generate --name demo-booking
+
+run seeders
+
+========================================================================================================================
+
+CREATE Reviews TABLE
+
+npx sequelize-cli model:generate --name Review --attributes spotId:integer,userId:integer,review:string,stars:integer
+
+add database-level and model-level constraints and validations
+    stars limit 1 - 5
+
+add foreign keys
+    spotId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Spots',
+            key: 'id'
+        }
+    }
+    userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Users',
+            key: 'id'
+        }
+    }
+
+add associations
+
+one (spot) --> many (reviews)
+
+    static associate(models) {
+            Review.belongsTo(
+                models.Spot,
+                {foreignKey: 'spotId'}
+            )
+        }
+    static associate(models) {
+            Spot.hasMany(
+                models.Review,
+                {foreignKey: 'spotId'}
+            )
+        }
+
+    one (user) --> many (reviews)
+
+    static associate(models) {
+            Reviews.belongsTo(
+                models.User,
+                {foreignKey: 'userId'}
+            )
+        }
+    static associate(models) {
+            User.hasMany(
+                models.Review,
+                {foreignKey: 'userId'}
+            )
+        }
+
+run migration
+
+npx sequelize-cli seed:generate --name demo-review
+
+run seeders
+
+========================================================================================================================
+
+CREATE ReviewImages TABLE
+
+npx sequelize-cli model:generate --name ReviewImage --attributes reviewId:integer,url:string
+
+add database-level and model-level constraints and validations
+For 'url':
+    url: {
+        type: DataTypes.STRING(2048),
+        allowNull: false,
+        validate: {
+            isUrl: true
+        }
+    }
+
+add foreign keys
+    reviewId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Reviews',
+            key: 'id'
+        }
+    }
+
+add associations
+
+one (review) --> many (reviewImage)
+
+    static associate(models) {
+            ReviewImage.belongsTo(
+                models.Review,
+                {foreignKey: 'reviewId'}
+            )
+        }
+    static associate(models) {
+            Review.hasMany(
+                models.ReviewImage,
+                {foreignKey: 'reviewId'}
+            )
+        }
+
+run migration
+
+npx sequelize seed:generate --name demo-review
+
+run seeders
+
+========================================================================================================================
+
+HOW TO START
+
+    Start with database (recommended)
+
+        If we're gonna start with the database, we need to confirm that our schema is correct prior to building the database. Check with Phillip on Monday.
+
+            (DONE) NOTE: I have 2 different schemas, one of which includes the 'avgRating' and 'previewImg' attributes on the SPOT model and one which does NOT. Is it better to state these attributes directly within the model definition, or calculate them dynamically? (Since they must be calculated using other values instead of provided directly by the user)
+
+                ANSWER: THe 'avgRating' and 'previewImg' attributes of the 'Spots' model should NOT actually be hard-coded into the model file. Rather, they should be calculated dynamically.
+
+    Kanban Project Cards
+
+        Authentication/Authorization required CARDS
+
+            How do we test to make sure that these tasks are complete? We tested our authentication/authorization processes during Auth Me, but I recall only recieving 400/500 errors, not 401/403. Does this mean that something is wrong? Or maybe that I have not finished these tasks yet?
+
+TESTING
+
+    Test frequently
+
+    (DONE) Test locally AND in production
+
+        (DONE) How do we test in our production environment?
+
+            ANSWER:
+            PRODUCTION TESTING: We test our production environment by setting the 'URL' in our postman environment to our Render.com URL.
+            LOCAL TESTING: We test our local environment by setting the 'URL' in our postman environment to our localhost URL.
+
+            NOTE: The sign up, log in, and get current user enpoints are working correctly in both production and development environments. Moving to 'In Review'.
+
+
+    Postman collection (for testing endpoints locally)
+
+        (DONE) I have the file that is used to create the postman collection, but I do not know how to use/apply it. How do I actually go about creating the Postman collection using the file?
+
+        (DONE) I am able to successfully create, log in, and get the current user through postman from the render.com url. How do I go about checking the Render.com database in order to verify that records are being stored correctly? Is there a way to view the Render.com database in its current state?
+
+            NOTE: I can tell that the user I created is stored in the db because when I delete the session and then log in again, the login is successful using the information from the signup. But I still want to know if there is a way to view or visualize the contents of the database.
+
+        Now I have a rudamentary understanding of how to run our tests in Postman. But I dont' know how to interact with, view, or use the PostgreSQL database.
