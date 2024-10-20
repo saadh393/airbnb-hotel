@@ -26,14 +26,36 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 50]
-        },
+          len: {
+            args: [1, 50],
+            msg: "First name must be between 1 and 50 characters"
+          },
+          notEmpty: {
+            args: "True",
+            msg: "First name is required"
+          },
+          notNull: {
+            args: "True",
+            msg: "First name is required"
+          }
+        }
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 50]
+          len: {
+            args: [1, 50],
+            msg: "Last name must be between 1 and 50 characters"
+          },
+          notEmpty: {
+            args: "True",
+            msg: "Las name is required"
+          },
+          notNull: {
+            args: "True",
+            msg: "Last name is required"
+          }
         },
       },
       username: {
@@ -47,6 +69,14 @@ module.exports = (sequelize, DataTypes) => {
               throw new Error('Cannot be an email.');
             }
           },
+          notEmpty: {
+            args: [true],
+            msg: "Username is required"
+          },
+          notNull: {
+            args: [true],
+            msg: "Username is required"
+          }
         },
       },
       email: {
@@ -55,7 +85,18 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           len: [3, 256],
-          isEmail: true,
+          isEmail: {
+            args: [true],
+            msg: "Invalid email"
+          },
+          notEmpty: {
+            args: [true],
+            msg: "Email is required"
+          },
+          notNull: {
+            args: [true],
+            msg: "Email is required"
+          }
         },
       },
       hashedPassword: {
