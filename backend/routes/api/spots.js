@@ -251,7 +251,9 @@ router.post("/", requireAuth,validateSpot, async (req, res, next) => {
     };
 });
 
-router.post('/:spotId/images',requireAuth,async(req,res,next)=>{
+//! Add an Image to a Spot by the Spot's ID
+
+router.post('/:spotId/images', requireAuth, async (req,res,next) => {
 
     try{
 
@@ -284,11 +286,9 @@ router.post('/:spotId/images',requireAuth,async(req,res,next)=>{
         })
 
         res.status(201).json(newSpotImage)
-    }
-    catch(err){
+    } catch(err){
         next(err)
     }
-
 })
 
 module.exports = router;
