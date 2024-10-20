@@ -31,13 +31,93 @@
 
 ## Goals
 
+### Route: Edit a Spot
+
+#### Notes
+
+- This route requires authentication
+
+- This route requires authorization (Spot must belong to the current user)
+
+- Route path is /:spotId
+
+- Method is PUT
+
+#### Plan
+
+1. Get the current user's userId from req.user.id
+2. Get the spotId from the route parameters
+3. Get the spot from the spotId
+4. If there is no spot with the provided spotId, return the following error response:
+```js
+{
+  "message": "Spot couldn't be found"
+}
+```
+5. Get the spot's ownerId from the spot
+6. Compare the current user's userId to the spot's ownerId
+7. If they match, user is authorized to edit the spot. If they do not, user is not authorized
+8. If the user is authorized, get the spot's edited attributes from the request body. The request body may look like this (if all attributes are eited):
+```js
+{
+  "address": "123 Disney Lane",
+  "city": "San Francisco",
+  "state": "California",
+  "country": "United States of America",
+  "lat": 37.7645358,
+  "lng": -122.4730327,
+  "name": "App Academy",
+  "description": "Place where web developers are created",
+  "price": 123
+}
+```
+9. For each attribute, if there is a new value, replace the old value of that attribute with the new value
+10. If the new values pass validations and the spot is successfully edited, return the edited spot as a json response. For example:
+```js
+{
+  "id": 1,
+  "ownerId": 1,
+  "address": "123 Disney Lane",
+  "city": "San Francisco",
+  "state": "California",
+  "country": "United States of America",
+  "lat": 37.7645358,
+  "lng": -122.4730327,
+  "name": "App Academy",
+  "description": "Place where web developers are created",
+  "price": 123,
+  "createdAt": "2021-11-19 20:39:36",
+  "updatedAt": "2021-11-20 10:06:40"
+}
+```
+
+#### Setup
+
+```js
+router.put("/:spotId", requireAuth, async (req, res, next) => {
+
+    try {
+
+
+
+    } catch(err) {
+        next(err);
+    };
+});
+
+```
+
 ### Route: Add An Image to a Spot Based on the Spot's ID
+
+#### Notes
 
 - This route requires authentication
 
 - This route requires authorization (Spot must belong to the current user)
 
 - Route path is /:spotId/images
+
+- I think that this will need to be a spotImages route, as opposed to a Spot route, since we are adding a new record into the spotImages table.
 
 #### Plan
 
@@ -72,11 +152,11 @@
 #### Setup
 
 ```js
-router.post("/:spotId/images", requireAuth, async(req, res, next) => {
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 
     try {
 
-        
+
 
     } catch(err) {
         next(err);
