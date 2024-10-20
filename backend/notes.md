@@ -215,7 +215,9 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
 
 - Route path is /:spotId/images
 
-- I think that this will need to be a spotImages route, as opposed to a Spot route, since we are adding a new record into the spotImages table.
+- ~~I think that this will need to be a spotImages route, as opposed to a Spot route, since we are adding a new record into the spotImages table.~~
+
+- ^^^ WRONG, NO SPOT IMAGES ROUTER. THE route path is /spots/:spotId/images, so this route obviously goes in the spots router.
 
 #### Plan
 

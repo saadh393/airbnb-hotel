@@ -220,7 +220,7 @@ const validateSpot = [
       .withMessage('Price per day must be a positive number'),
     handleValidationErrors // This middleware handles validation errors
   ];
-  
+
 router.post("/", requireAuth,validateSpot, async (req, res, next) => {
 
     try {
@@ -230,7 +230,7 @@ router.post("/", requireAuth,validateSpot, async (req, res, next) => {
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
 
         // res.json(req.body); //! For testing
-        
+
         const newSpot = await Spot.create({
             ownerId,
             address,
@@ -250,5 +250,45 @@ router.post("/", requireAuth,validateSpot, async (req, res, next) => {
         next(err);
     };
 });
+
+router.post('/:spotId/images',requireAuth,async(req,res,next)=>{
+
+    try{
+
+        const userId = req.user.id;
+        const spotId = req.params.spotId;
+        const spot = await Spot.findByPk(spotId);
+
+        console.log(spot);
+
+        if (!spot) {
+            return res.status(404).json({
+                message:"Spot couldn't be found"
+            })
+        }
+
+        if (spot.ownerId !== userId) {
+            return res.status(403).json({
+                message:"Unauthorized"
+            })
+        }
+
+        const { url, preview } = req.body;
+
+        const newSpotImage = await SpotImage.create({
+
+            spotId: spotId,
+            url,
+            preview
+
+        })
+
+        res.status(201).json(newSpotImage)
+    }
+    catch(err){
+        next(err)
+    }
+
+})
 
 module.exports = router;
