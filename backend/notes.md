@@ -21,7 +21,7 @@
 
     Right now we have a constraint on the model file, but not on the migration file. Maybe adding the (2048) to replace the default (250) character limit on the migration file will fix this.
 
-    In order to make that change, we first need to modify the migration file. After that, we need to manually drop the database on Render so that it will re-build the database using the updated migration file. Here is the command to
+    In order to make that change, we first need to modify the migration file. After that, we need to manually drop the database on Render so that it will re-build the database using the updated migration file.
 
     The command to open the PostgreSQL Database in our terminal is: PGPASSWORD=bpBTOrAC90SK9bmz7icVIeVnBspsvFPl psql -h dpg-cs2mmr0gph6c738688fg-a.oregon-postgres.render.com -U app_academy_projects_hlgc_user app_academy_projects_hlgc
 
@@ -30,6 +30,260 @@
     After we've dropped the database following modification of the migration file, manually re-deploy the bed-and-breakfast web service using the 'Clear build cache and deploy' command from the Render.com GUI.
 
 ## Goals
+
+### Route: Delete a Spot
+
+#### Notes
+
+- This route requires authentication
+
+- This route requires Authorization (Spot must belong to the current user)
+
+- Route path is /:spotId
+
+- Method is DELETE
+
+- (Consider) Use the findOne method to find the record and the destroy method to delete the record.
+
+#### Plan
+
+1. Get the current user's userId from req.user.id
+2. Get the spot's spotId from the route parameters
+3. Get the spot from the spotId
+4. If there is no spot with the provided spotId, return the following error response:
+```js
+{
+  "message": "Spot couldn't be found"
+}
+```
+5. Get the spot's ownerId from the spot
+6. Compare the current user's userId to the spot's ownerId
+7. If they match, user is authorized
+8. If the user is authorized, delete the spot. For example:
+```js
+const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        await spot.destroy();
+        res.status(200).json({ message: 'Successfully deleted' });
+```
+
+#### Setup
+
+```js
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = req.params.spotId;
+
+        // Get the spot by spotId
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        // Check if the current user is the owner of the spot
+        if (spot.ownerId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Delete the spot
+        await spot.destroy();
+        res.status(200).json({ message: 'Successfully deleted' });
+    } catch (err) {
+        next(err);
+    }
+});
+```
+
+### Route: Edit a Spot
+
+#### Notes
+
+- This route requires authentication
+
+- This route requires authorization (Spot must belong to the current user)
+
+- Route path is /:spotId
+
+- Method is PUT
+
+#### Plan
+
+1. Get the current user's userId from req.user.id
+2. Get the spotId from the route parameters
+3. Get the spot from the spotId
+4. If there is no spot with the provided spotId, return the following error response:
+```js
+{
+  "message": "Spot couldn't be found"
+}
+```
+5. Get the spot's ownerId from the spot
+6. Compare the current user's userId to the spot's ownerId
+7. If they match, user is authorized to edit the spot. If they do not, user is not authorized
+8. If the user is authorized, get the spot's edited attributes from the request body. The request body may look like this (if all attributes are eited):
+```js
+{
+  "address": "123 Disney Lane",
+  "city": "San Francisco",
+  "state": "California",
+  "country": "United States of America",
+  "lat": 37.7645358,
+  "lng": -122.4730327,
+  "name": "App Academy",
+  "description": "Place where web developers are created",
+  "price": 123
+}
+```
+9. For each attribute, if there is a new value, replace the old value of that attribute with the new value
+10. If the new values pass validations and the spot is successfully edited, return the edited spot as a json response. For example:
+```js
+{
+  "id": 1,
+  "ownerId": 1,
+  "address": "123 Disney Lane",
+  "city": "San Francisco",
+  "state": "California",
+  "country": "United States of America",
+  "lat": 37.7645358,
+  "lng": -122.4730327,
+  "name": "App Academy",
+  "description": "Place where web developers are created",
+  "price": 123,
+  "createdAt": "2021-11-19 20:39:36",
+  "updatedAt": "2021-11-20 10:06:40"
+}
+```
+
+#### Setup
+
+```js
+router.put("/:spotId", requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = req.params.spotId;
+
+        // Get the spot by spotId
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        // Check if the current user is the owner of the spot
+        if (spot.ownerId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Get the new values from the request body
+        const { address, city, state, country, lat, lng, name, description, price } = req.body;
+
+        // Update the spot attributes
+        if (address) spot.address = address;
+        if (city) spot.city = city;
+        if (state) spot.state = state;
+        if (country) spot.country = country;
+        if (lat) spot.lat = lat;
+        if (lng) spot.lng = lng;
+        if (name) spot.name = name;
+        if (description) spot.description = description;
+        if (price) spot.price = price;
+
+        // Save the updated spot
+        await spot.save();
+
+        res.json(spot);
+    } catch (err) {
+        next(err);
+    }
+});
+
+```
+
+### Route: Add An Image to a Spot Based on the Spot's ID
+
+#### Notes
+
+- This route requires authentication
+
+- This route requires authorization (Spot must belong to the current user)
+
+- Route path is /:spotId/images
+
+- I think that this will need to be a spotImages route, as opposed to a Spot route, since we are adding a new record into the spotImages table.
+
+#### Plan
+
+- ~~Set up 'spotImages' router~~
+1. Get the current user's userId from req.user.id
+2. Get the spotId from route parameters
+3. Get the spot from the spotId
+4. If there is no spot with the provided spotId, return the following error response:
+```js
+{
+  "message": "Spot couldn't be found"
+}
+```
+5. Get the spot's ownerId from the spot
+6. Compare current user's userId to the spot's ownerId
+7. If they match, user is authorized to add an image to the spot. If they do not, the user is not authorized.
+8. If the user is authorized, create a new record in spotImages table with the provided request body (url + previewImage) and the corresponding spotId.
+```js
+{
+  "url": "image url",
+  "preview": true
+}
+```
+9. Then return the newly-created spotImage as a json response. For example:
+```js
+{
+  "id": 1,
+  "url": "image url",
+  "preview": true
+}
+```
+
+#### Setup
+
+```js
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = req.params.spotId;
+
+        // Get the spot by spotId
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        // Check if the current user is the owner of the spot
+        if (spot.ownerId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Get the new values from the request body
+        const { url, preview } = req.body;
+
+        // Create a new SpotImage record
+        const newSpotImage = await SpotImage.create({
+            spotId: spotId,
+            url,
+            preview
+        });
+
+        res.status(201).json(newSpotImage);
+    } catch (err) {
+        next(err);
+    }
+});
+```
 
 ### Route: Create A Spot
 

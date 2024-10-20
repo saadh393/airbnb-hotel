@@ -15,15 +15,15 @@ module.exports = (sequelize, DataTypes) => {
       Review.belongsTo(
         models.Spot,
         { foreignKey: "spotId" }
-      ),
-        Review.belongsTo(
-          models.User,
-          { foreignKey: 'userId' }
-        ),
-        Review.hasMany(
-          models.ReviewImage,
-          { foreignKey: 'reviewId' }
-        )
+      );
+      Review.belongsTo(
+        models.User,
+        { foreignKey: 'userId' }
+      );
+      Review.hasMany(
+        models.ReviewImage,
+        { foreignKey: 'reviewId' }
+      );
     }
   }
   Review.init({
@@ -37,7 +37,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     review: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Review text is required"
+        },
+        notEmpty: {
+          msg: "Review text is required"
+        }
+      }
     },
     stars: {
       type: DataTypes.INTEGER,
@@ -45,11 +53,11 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         min: {
           args: [0],
-          msg: 'Stars must be at least 0'
+          msg: 'Stars must be an integer from 0 to 5'
         },
         max: {
           args: [5],
-          msg: 'Stars must be at most 5.'
+          msg: 'Stars must be an integer from 0 to 5'
         }
       }
     }

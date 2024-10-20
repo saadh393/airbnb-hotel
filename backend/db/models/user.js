@@ -7,16 +7,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(
         models.Spot,
-        {foreignKey: 'ownerId'}
-      ),
+        { foreignKey: 'ownerId' }
+      );
       User.hasMany(
         models.Booking,
-        {foreignKey: 'userId'}
-        ),
-        User.hasMany(
-          models.Review,
-          {foreignKey: 'userId'}
-        )
+        { foreignKey: 'userId' }
+      );
+      User.hasMany(
+        models.Review,
+        { foreignKey: 'userId' }
+      );
     }
   }
 
@@ -26,14 +26,32 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 50]
-        },
+          len: {
+            args: [1, 50],
+            msg: "First name must be between 1 and 50 characters"
+          },
+          notEmpty: {
+            msg: "First name is required"
+          },
+          notNull: {
+            msg: "First name is required"
+          }
+        }
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 50]
+          len: {
+            args: [1, 50],
+            msg: "Last name must be between 1 and 50 characters"
+          },
+          notEmpty: {
+            msg: "Last name is required"
+          },
+          notNull: {
+            msg: "Last name is required"
+          }
         },
       },
       username: {
@@ -41,12 +59,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          len: [4, 30],
+          len: {
+            args: [4, 30],
+            msg: "Username must be between 4 and 30 characters"
+          },
           isNotEmail(value) {
-            if (Validator.isEmail(value)) {
+            if (sequelize.Validator.isEmail(value)) {
               throw new Error('Cannot be an email.');
             }
           },
+          notEmpty: {
+            msg: "Username is required"
+          },
+          notNull: {
+            msg: "Username is required"
+          }
         },
       },
       email: {
@@ -54,8 +81,22 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          len: [3, 256],
-          isEmail: true,
+          len: {
+            args: [3, 256],
+            msg: "Email must be between 3 and 256 characters"
+          },
+          isEmail: {
+            args: [true],
+            msg: "Invalid email"
+          },
+          notEmpty: {
+            args: [true],
+            msg: "Email is required"
+          },
+          notNull: {
+            args: [true],
+            msg: "Email is required"
+          }
         },
       },
       hashedPassword: {
