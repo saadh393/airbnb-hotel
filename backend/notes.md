@@ -217,6 +217,8 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
 
 - I think that this will need to be a spotImages route, as opposed to a Spot route, since we are adding a new record into the spotImages table.
 
+- ~~Set up 'spotImages' router~~
+
 #### Plan
 
 1. Get the current user's userId from req.user.id
