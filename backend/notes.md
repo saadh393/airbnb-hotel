@@ -31,6 +31,59 @@
 
 ## Goals
 
+### Route: Add An Image to a Spot Based on the Spot's ID
+
+- This route requires authentication
+
+- This route requires authorization (Spot must belong to the current user)
+
+- Route path is /:spotId/images
+
+#### Plan
+
+1. Get the current user's userId from req.user.id
+2. Get the spotId from route parameters
+3. Get the spot from the spotId
+4. If there is no spot with the provided spotId, return the following error response:
+```js
+{
+  "message": "Spot couldn't be found"
+}
+```
+5. Get the spot's ownerId from the spot
+6. Compare current user's userId to the spot's ownerId
+7. If they match, user is authorized to add an image to the spot. If they do not, the user is not authorized.
+8. If the user is authorized, create a new record in spotImages table with the provided request body (url + previewImage) and the corresponding spotId.
+```js
+{
+  "url": "image url",
+  "preview": true
+}
+```
+9. Then return the newly-created spotImage as a json response. For example:
+```js
+{
+  "id": 1,
+  "url": "image url",
+  "preview": true
+}
+```
+
+#### Setup
+
+```js
+router.post("/:spotId/images", requireAuth, async(req, res, next) => {
+
+    try {
+
+        
+
+    } catch(err) {
+        next(err);
+    };
+});
+```
+
 ### Route: Create A Spot
 
 #### Notes
