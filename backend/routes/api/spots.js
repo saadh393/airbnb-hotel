@@ -291,6 +291,8 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     }
 })
 
+//! Edit Spot 
+
 router.put('/:spotId',requireAuth,async(req,res,next)=>{
     try{
         const spotId = req.params.spotId;
