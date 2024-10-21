@@ -2,6 +2,8 @@
 
 ## Questions
 
+- Delete a Spot route works correctly on local environment, but fails on live environment because it validates foreign key constraint on spotImages table
+
 - Why does Render.com no longer automatically re-deploy when we push to github? We changed the branch from main to dev, but it does not automatically re-deploy when we push to dev.
 
 - Are we able to change Raihan's repo url so that he is able to re-deploy from my repo (which we are sharing as our joint project repo)?
@@ -34,6 +36,10 @@
     After we've dropped the database following modification of the migration file, manually re-deploy the bed-and-breakfast web service using the 'Clear build cache and deploy' command from the Render.com GUI.
 
 ## Goals
+
+### Route: Get All Reviews
+
+---
 
 ### Route: Delete a Spot
 
