@@ -361,7 +361,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 
     try {
 
-        const userId = req.user.id
+        const userId = req.user.id;
 
         const spotId = req.params.spotId;
 

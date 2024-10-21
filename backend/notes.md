@@ -37,7 +37,85 @@
 
 ## Goals
 
-### Route: Get All Reviews
+### Route: Add an Image to a Review based on the Review's id
+
+#### Notes
+
+- This route requires authentication
+
+- This route requires authorization
+
+- This route belongs in the Reviews router
+
+- The path is: "/:reviewId/images"
+
+#### Plan
+
+- Get the current user's id from req.user.id
+
+- Get the review's reviewId from the route parameters
+
+- Get the review using the review's id
+
+- If the review does not exist, return a 404 error respnose:
+
+```json
+{
+  "message": "Review couldn't be found"
+}
+```
+
+- Get the review's userId from the review
+
+- Compare the user's id to the Review's userId. If they match, authorized. If not, return a 403 error response
+
+- get the url from the request body:
+
+```json
+{
+  "url": "image url"
+}
+```
+
+- create a new ReviewImage using the url
+
+- return the new ReviewImage as a json response
+
+#### Setup
+
+```js
+router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const reviewId = req.params.reviewId;
+
+        // Get the review by reviewId
+        const review = await Review.findByPk(reviewId);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review couldn't be found" });
+        }
+
+        // Check if the current user is the owner of the review
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Get the url from the request body
+        const { url } = req.body;
+
+        // Create a new ReviewImage record
+        const newReviewImage = await ReviewImage.create({
+            reviewId,
+            url
+        });
+
+        res.status(201).json(newReviewImage);
+    } catch (err) {
+        next(err);
+    }
+});
+```
 
 ---
 
