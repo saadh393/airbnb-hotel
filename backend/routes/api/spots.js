@@ -291,7 +291,7 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     }
 })
 
-//! Edit Spot 
+//! Edit Spot
 
 router.put('/:spotId',requireAuth,async(req,res,next)=>{
     try{
@@ -325,6 +325,9 @@ router.put('/:spotId',requireAuth,async(req,res,next)=>{
         next(err)
     }
 })
+
+//! Delete A Spot
+
 router.delete('/:spotId',requireAuth,async(req,res,next)=>{
     try{
         const spotId = req.params.spotId;
