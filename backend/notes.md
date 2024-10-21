@@ -35,6 +35,10 @@
 
 ## Goals
 
+### Route: Get All Reviews
+
+---
+
 ### Route: Delete a Spot
 
 #### Notes
