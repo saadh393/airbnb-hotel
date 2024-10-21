@@ -2,6 +2,10 @@
 
 ## Questions
 
+- Why does Render.com no longer automatically re-deploy when we push to github? We changed the branch from main to dev, but it does not automatically re-deploy when we push to dev.
+
+- Are we able to change Raihan's repo url so that he is able to re-deploy from my repo (which we are sharing as our joint project repo)?
+
 - ~~A dev branch already exists in my github repo, but Raihan isn't able to pull that branch or access it. Should he create his own dev branch on his end? Or is there a way that he can access the same dev branch that I"m working on~~?
 
 - ~~Rahan pulled my repo and doesn't have a .env file (I'm assuming because it's in my .gitignore). How should we handle this?~~
