@@ -37,6 +37,39 @@
 
 ## Goals
 
+### Route: Edit a Review
+
+#### Notes
+
+- Requires authentication
+
+- Requires authorization
+
+- Request method PUT
+
+- Route path: /:reviewId (belongs in Reviews router)
+
+#### Plan
+
+- Get current user's userId using req.user.id
+
+- Get the review's reviewId from route parameters
+
+#### Setup
+
+```js
+router.put("/:reviewId", requireAuth, async (req, res, next) => {
+
+    try {
+
+
+
+    } catch(err) {
+        next(err)
+    }
+})
+```
+
 ### Route: Add an Image to a Review based on the Review's id
 
 #### Notes
