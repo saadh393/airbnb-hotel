@@ -291,4 +291,38 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     }
 })
 
+router.put('/:spotId',requireAuth,async(req,res,next)=>{
+    try{
+        const spotId = req.params.spotId;
+        const userId = req.user.id;
+        const spot = await Spot.findByPk(spotId);
+        if(!spot){
+           return res.status(404).json({
+            message:"Spot couldn't be found"
+           })
+        }
+        if (spot.ownerId !== userId){
+            return res.status(403).json({
+                message:"Unauthorized"
+            })
+        }
+        const {address,city,state,country,lat,lng,name,description,price} = req.body;
+        if(address) spot.address = address;
+        if(state) spot.state = state;
+        if(city)spot.city =city;
+        if(country)spot.country = country;
+        if(lat) spot.lat = lat;
+        if(lng) spot.lng = lng;
+        if(name) spot.name = name;
+        if(description) spot.description = description;
+        if(price) spot.price = price
+        await spot.save();
+        res.json(spot);
+    }
+    catch(err){
+        next(err)
+    }
+})
+
+
 module.exports = router;
