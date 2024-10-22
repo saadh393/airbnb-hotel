@@ -347,6 +347,16 @@ router.delete('/:spotId',requireAuth,async(req,res,next)=>{
 
         await SpotImage.destroy({ where: { spotId: spotId } });
         await Booking.destroy({ where: { spotId: spotId } });
+
+        // Find all reviews for the spot
+        const reviews = await Review.findAll({ where: { spotId: spotId } });
+
+        // Delete associated ReviewImage records for each review
+        for (const review of reviews) {
+            await ReviewImage.destroy({ where: { reviewId: review.id } });
+        }
+
+         // Now delete the Review records
         await Review.destroy({ where: { spotId: spotId } });
 
         await spot.destroy();
