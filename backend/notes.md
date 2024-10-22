@@ -150,6 +150,90 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 });
 ```
 
+### Route: Get All Reviews by a Spot's id
+
+#### Notes
+
+- This route does not require authentication or authorization
+
+- This is a 'spots' route
+
+- Path: spots/:spotId/reviews
+
+#### Plan
+
+- Get spotId from route parameters
+
+- Get the spot from the spotId
+
+- If (!spot) return the following error message:
+
+```js
+{
+  "message": "Spot couldn't be found"
+}
+```
+
+- Get all reviews where spotId = spotId
+
+- return the reviews as a JSON object in the following format:
+
+```js
+{
+  "Reviews": [
+    {
+      "id": 1,
+      "userId": 1,
+      "spotId": 1,
+      "review": "This was an awesome spot!",
+      "stars": 5,
+      "createdAt": "2021-11-19 20:39:36",
+      "updatedAt": "2021-11-19 20:39:36" ,
+      "User": {
+        "id": 1,
+        "firstName": "John",
+        "lastName": "Smith"
+      },
+      "ReviewImages": [
+        {
+          "id": 1,
+          "url": "image url"
+        }
+      ],
+    }
+  ]
+}
+```
+
+#### Setup
+
+```js
+router.get('/:spotId/reviews', async (req, res, next) => {
+
+    try {
+
+        const spotId = req.params.spotId;
+
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            res.status(404).json({ message: "Spot couldn't be found" })
+        }
+
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spotId
+            }
+        });
+
+        res.status(200).json(reviews);
+
+    } catch (err) {
+        next(err)
+    }
+});
+```
+
 ---
 
 ### Route: Delete a Spot

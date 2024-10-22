@@ -371,6 +371,38 @@ router.delete('/:spotId',requireAuth,async(req,res,next)=>{
     }
 })
 
+//! Get All Reviews by a Spot's ID
+
+router.get('/:spotId/reviews', async (req, res, next) => {
+
+    try {
+
+        const spotId = req.params.spotId;
+
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            res.status(404).json({ message: "Spot couldn't be found" })
+        }
+
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spotId
+            },
+
+            include: [
+                { model: User, attributes: ['id', 'firstName', 'lastName'] },
+                { model: ReviewImage, attributes: ['id', 'url'] }
+            ]
+        });
+
+        res.status(200).json({Reviews: reviews});
+
+    } catch (err) {
+        next(err)
+    }
+});
+
 //! Create a Review for a Spot based on the Spot's ID
 
 router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
