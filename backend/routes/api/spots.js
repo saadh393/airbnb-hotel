@@ -347,7 +347,7 @@ router.delete('/:spotId',requireAuth,async(req,res,next)=>{
 
         await SpotImage.destroy({ where: { spotId: spotId } });
         await Booking.destroy({ where: { spotId: spotId } });
-        // await Review.destroy({ where: { spotId: spotId } });
+        await Review.destroy({ where: { spotId: spotId } });
 
         await spot.destroy();
 
