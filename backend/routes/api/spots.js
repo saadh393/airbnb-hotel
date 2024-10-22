@@ -344,7 +344,11 @@ router.delete('/:spotId',requireAuth,async(req,res,next)=>{
                 message:"Unauthorized"
             })
         }
-       await spot.destroy();
+
+        await SpotImage.destroy({ where: { spotId: spotId } });
+
+        await spot.destroy();
+
        res.status(200).json({
         message:"Successfully deleted"
        })
