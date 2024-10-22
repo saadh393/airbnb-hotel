@@ -100,6 +100,14 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
 
 - Get the review's userId from the review
 
+- Check if the review already has 10 images (if there are 10 imags with a 'reviewId' matching the review's reviewId). If so, throw the following 403 error:
+
+```js
+{
+  "message": "Maximum number of images for this resource was reached"
+}
+```
+
 - Compare the user's id to the Review's userId. If they match, authorized. If not, return a 403 error response
 
 - get the url from the request body:
