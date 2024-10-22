@@ -2,7 +2,7 @@
 
 ## Questions
 
-- Delete a Spot route works correctly on local environment, but fails on live environment because it validates foreign key constraint on spotImages table
+- Delete a Spot route works correctly on local environment, but fails on live environment because it validates foreign key constraint on spotImages table. We are thinking about adding an onDelete: cascade statement within the .destroy method of the route handler.
 
 - Why does Render.com no longer automatically re-deploy when we push to github? We changed the branch from main to dev, but it does not automatically re-deploy when we push to dev.
 
