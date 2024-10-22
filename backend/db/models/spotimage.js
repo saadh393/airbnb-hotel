@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         models.Spot,
         {
           foreignKey: 'spotId',
-          onDelete: 'CASCADE'
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
         }
       )
     }
