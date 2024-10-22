@@ -37,6 +37,78 @@
 
 ## Goals
 
+### Route: Delete a Review
+
+#### Notes
+
+- This route requires authentication
+
+- This route requires authorization
+
+- Use DELETE method
+
+- route path = api/reviews/:reviewId
+
+#### Plan
+
+- Get userId from req.user.id (from auth workflow)
+
+- Get the reviewId from the request parameters
+
+- Get the review using the reviewId
+
+- If (!review), then send the following 404 error:
+
+```json
+{
+  "message": "Review couldn't be found"
+}
+```
+
+- Compare the review's userId to the current user's userId. If they match, the user is authorized. If not, unauthorized.
+
+- Use the .destroy method to delete the review.
+
+- return the following json response:
+
+```json
+{
+  "message": "Successfully deleted"
+}
+```
+
+#### Setup
+
+```js
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const reviewId = req.params.reviewId;
+
+        // Get the review by reviewId
+        const review = await Review.findByPk(reviewId);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review couldn't be found" });
+        }
+
+        // Check if the current user is the owner of the review
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Use the .destroy method to delete the review
+        await review.destroy();
+
+        res.status(200).json({ message: "Successfully deleted" });
+    } catch (err) {
+        next(err);
+    }
+});
+
+module.exports = router;
+```
+
 ### Route: Edit a Review
 
 #### Notes
@@ -55,19 +127,74 @@
 
 - Get the review's reviewId from route parameters
 
+- Get the review using the reviewId
+
+- If (!review), return the following 404 error:
+
+```json
+{
+  "message": "Review couldn't be found"
+}
+```
+
+Otherwise, get the 'review' and 'stars' from the request body.
+```js
+{review, stars} = req.body
+```
+
+- If (review), then set review.review = review.
+- IF (stars), then set review.stars = stars.
+
+- then use the .save method to save the changes to review
+
+- finally, send the edited review as a json response in the following format:
+
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "spotId": 1,
+  "review": "This was an awesome spot!",
+  "stars": 5,
+  "createdAt": "2021-11-19 20:39:36",
+  "updatedAt": "2021-11-20 10:06:40"
+}
+```
+
 #### Setup
 
 ```js
 router.put("/:reviewId", requireAuth, async (req, res, next) => {
-
     try {
+        const userId = req.user.id;
+        const reviewId = req.params.reviewId;
 
+        // Get the review by reviewId
+        const review = await Review.findByPk(reviewId);
 
+        if (!review) {
+            return res.status(404).json({ message: "Review couldn't be found" });
+        }
 
-    } catch(err) {
-        next(err)
+        // Check if the current user is the owner of the review
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        const { review: newReview, stars } = req.body;
+
+        // Update the review fields
+        if (newReview) review.review = newReview;
+        if (stars) review.stars = stars;
+
+        // Save the changes
+        await review.save();
+
+        res.status(200).json(review);
+    } catch (err) {
+        next(err);
     }
-})
+});
 ```
 
 ### Route: Add an Image to a Review based on the Review's id
@@ -244,7 +371,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 ---
 
-### Route: Delete a Spot
+### ~~Route: Delete a Spot~~
 
 #### Notes
 
@@ -313,7 +440,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
 });
 ```
 
-### Route: Edit a Spot
+### ~~Route: Edit a Spot~~
 
 #### Notes
 
@@ -418,7 +545,7 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
 
 ```
 
-### Route: Add An Image to a Spot Based on the Spot's ID
+### ~~Route: Add An Image to a Spot Based on the Spot's ID~~
 
 #### Notes
 
@@ -500,7 +627,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 });
 ```
 
-### Route: Create A Spot
+### ~~Route: Create A Spot~~
 
 #### Notes
 
