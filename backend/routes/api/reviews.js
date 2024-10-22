@@ -26,6 +26,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
     };
 })
 
+//! Add an image to a review by a review ID
+
 router.post('/:reviewId/images',requireAuth,async(req,res,next)=>{
     try{
         const reviewId = req.params.reviewId;
