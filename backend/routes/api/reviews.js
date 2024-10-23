@@ -60,4 +60,34 @@ router.post('/:reviewId/images',requireAuth,async(req,res,next)=>{
         next(err)
     }
 })
+router.put('/:reviewId',requireAuth,async(req,res,next)=>{
+    try{
+        const reviewId = req.params.reviewId;
+        const userId = req.user.id;
+        
+        const review = await Review.findByPk(reviewId);
+        if(!review){
+            return res.status(404).json({
+                message:"Review couldn't be found"
+            })
+        }
+        if(review.userId !== userId){
+            return res.status(403).json({
+                message:"Unauthorized"
+            })
+        }
+        const {review:newReview,stars} = req.body;
+        if(newReview){
+            review.review = newReview;
+        }
+        if(stars){
+            review.stars = stars
+        }
+        await review.save();
+        res.status(201).json(review)
+    }
+    catch(err){
+        next(err)
+    }
+})
 module.exports = router;
