@@ -269,6 +269,13 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
             return res.status(403).json({ message: "Unauthorized" });
         }
 
+        const imageCount = await ReviewImage.count({ where: { reviewId: reviewId } });
+
+        if (imageCount >= 10) {
+            return res.status(403).json({ message: "Maximum number of images for this resource was reached" });
+        }
+
+
         // Get the url from the request body
         const { url } = req.body;
 
@@ -285,7 +292,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
 });
 ```
 
-### Route: Get All Reviews by a Spot's id
+### ~~Route: Get All Reviews by a Spot's id~~
 
 #### Notes
 
