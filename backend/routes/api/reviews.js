@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Review, ReviewImage, Spot, User } = require('../../db/models');
+const { Review, ReviewImage, Spot, User, sequelize} = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
@@ -9,21 +9,41 @@ const router = express.Router();
 router.get('/current', requireAuth, async (req, res, next) => {
 
     try {
+        const userId = req.user.id;
 
-        let id = req.user.id;
+        // Get all reviews of the current user with associated User, Spot, and ReviewImage
+        const reviews = await Review.findAll({
 
-        let reviews = await Review.findAll({
+            where: { userId: userId },
 
-            where: {
-                userId: id
-            }
-        })
+            include: [
 
-        res.json({Reviews: reviews})
+                { model: User, attributes: ['id', 'firstName', 'lastName'] },
 
-    } catch(err) {
+                {
+                    model: Spot,
+                    attributes: [
+
+                        'id', 'ownerId', 'address', 'city', 'state', 'country',
+                        'lat', 'lng', 'name', 'price',
+
+                        [sequelize.literal(`(
+                            SELECT url
+                            FROM "SpotImages"
+                            WHERE
+                                "SpotImages"."spotId" = "Spot"."id"
+                            LIMIT 1
+                        )`), 'previewImage']
+                    ]
+                },
+                { model: ReviewImage, attributes: ['id', 'url'] }
+            ]
+        });
+
+        res.status(200).json({ Reviews: reviews });
+    } catch (err) {
         next(err);
-    };
+    }
 })
 
 //! Add an image to a review by a review ID
