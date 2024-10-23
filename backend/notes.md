@@ -37,6 +37,89 @@
 
 ## Goals
 
+### Route: Add Query Filters to Get All Spots
+
+#### Setup
+
+```js
+router.get("/", async (req, res, next) => {
+    try {
+        const {
+            page = 1,
+            size = 20,
+            minLat,
+            maxLat,
+            minLng,
+            maxLng,
+            minPrice,
+            maxPrice
+        } = req.query; // extract query parameters from req.query
+        
+        // apply pagination with default values and validate them
+        const pagination = {};
+
+        if (parseInt(page, 10) >= 1 && parseInt(size, 10) >= 1 && parseInt(size, 10) <= 20) {
+            pagination.limit = parseInt(size, 10);
+            pagination.offset = (parseInt(page, 10) - 1) * parseInt(size, 10);
+        } else {
+            return res.status(400).json({
+                message: "Bad Request",
+                errors: {
+                    page: "Page must be greater than or equal to 1",
+                    size: "Size must be between 1 and 20"
+                }
+            });
+        }
+
+        // Apply filters (lat, long, price) if provided and valid
+        const where = {};
+
+        if (minLat) where.lat = { [Op.gte]: parseFloat(minLat) };
+        if (maxLat) where.lat = { [Op.lte]: parseFloat(maxLat) };
+        if (minLng) where.lng = { [Op.gte]: parseFloat(minLng) };
+        if (maxLng) where.lng = { [Op.lte]: parseFloat(maxLng) };
+        if (minPrice && parseFloat(minPrice) >= 0) where.price = { [Op.gte]: parseFloat(minPrice) };
+        if (maxPrice && parseFloat(maxPrice) >= 0) where.price = { [Op.lte]: parseFloat(maxPrice) };
+
+        // user spot.findAll() with the 'where' clause and 'pagination' applied.
+        const spots = await Spot.findAll({
+            include: [
+                { model: Review, attributes: ['stars'] },
+                { model: SpotImage, attributes: ['url'] }
+            ],
+            where,
+            ...pagination
+        });
+
+        const spotList = spots.map(spot => {
+
+            const spotData = spot.toJSON();
+
+            const avgRating = spotData.Reviews && spotData.Reviews.length > 0
+            ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length
+            : 0;
+
+            const previewImage = spot.SpotImages[0] ? spot.SpotImages[0].url : null;
+
+            delete spotData.SpotImages;
+            delete spotData.Reviews;
+
+            return {
+            ...spotData,
+            avgRating,
+            previewImage
+            };
+        });
+
+        // also, include pagination data in the response
+        res.status(200).json({ Spots: spotList, page: parseInt(page, 10), size: parseInt(size, 10) });
+
+    } catch (err) {
+        next(err);
+    }
+});
+```
+
 ### Route: Delete a Review Image
 
 #### Notes
