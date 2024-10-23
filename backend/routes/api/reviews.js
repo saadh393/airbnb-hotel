@@ -115,6 +115,8 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
             return res.status(403).json({ message: "Unauthorized" });
         };
 
+        await ReviewImage.destroy({ where: { reviewId: reviewId } });
+
         await review.destroy();
 
         res.status(200).json({ message: "Successfully deleted" });
