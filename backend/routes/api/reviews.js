@@ -7,44 +7,49 @@ const router = express.Router();
 //! Get All Reviews of Current User
 
 router.get('/current', requireAuth, async (req, res, next) => {
-
     try {
         const userId = req.user.id;
 
-        // Get all reviews of the current user with associated User, Spot, and ReviewImage
+        // Get all reviews of the current user with associated User, Spot, ReviewImage, and SpotImage
         const reviews = await Review.findAll({
 
             where: { userId: userId },
 
             include: [
-
                 { model: User, attributes: ['id', 'firstName', 'lastName'] },
-
                 {
                     model: Spot,
                     attributes: [
-
                         'id', 'ownerId', 'address', 'city', 'state', 'country',
-                        'lat', 'lng', 'name', 'price',
-
-                        [sequelize.literal(`(
-                            SELECT url
-                            FROM "spotimages"
-                            WHERE
-                                "spotimages"."spotId" = "Spot"."id"
-                            LIMIT 1
-                        )`), 'previewImage']
+                        'lat', 'lng', 'name', 'price'
+                    ],
+                    include: [
+                        { model: SpotImage, attributes: ['url'], limit: 1 }
                     ]
                 },
                 { model: ReviewImage, attributes: ['id', 'url'] }
             ]
         });
 
-        res.status(200).json({ Reviews: reviews });
+        const reviewList = reviews.map(review => {
+
+            const reviewData = review.toJSON();
+
+            const previewImage = reviewData.Spot && reviewData.Spot.SpotImages.length > 0
+            ? reviewData.Spot.SpotImages[0].url
+            : null;
+
+            if (reviewData.Spot) reviewData.Spot.previewImage = previewImage;
+            if (reviewData.Spot) delete reviewData.Spot.SpotImages;
+
+            return reviewData;
+        });
+
+        res.status(200).json({ Reviews: reviewList });
     } catch (err) {
         next(err);
     }
-})
+});
 
 //! Add an image to a review by a review ID
 
