@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Review, ReviewImage, Spot, User, sequelize } = require('../../db/models');
+const { Review, ReviewImage, SpotImage, Spot, User, sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
@@ -29,9 +29,9 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
                         [sequelize.literal(`(
                             SELECT url
-                            FROM "spotimages"
+                            FROM "SpotImages"
                             WHERE
-                                "spotimages"."spotId" = "Spot"."id"
+                                "SpotImages"."spotId" = "Spot"."id"
                             LIMIT 1
                         )`), 'previewImage']
                     ]
