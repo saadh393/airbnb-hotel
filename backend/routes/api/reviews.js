@@ -62,4 +62,7 @@ router.post('/:reviewId/images',requireAuth,async(req,res,next)=>{
         next(err)
     }
 })
+
+
+
 module.exports = router;
