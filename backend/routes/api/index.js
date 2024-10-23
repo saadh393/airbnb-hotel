@@ -30,11 +30,11 @@ router.use('/users', usersRouter);
 
 router.use('/spots', spotsRouter); //! Spots router
 
-router.use('/spotImages', spotImagesRouter);
+router.use('/spot-images', spotImagesRouter);
 
 router.use('/reviews', reviewsRouter);
 
-router.use('/reviewImages', reviewImagesRouter);
+router.use('/review-images', reviewImagesRouter);
 
 // router.post('/test', (req, res) => { // route for testing POST requests
 //   res.json({ requestBody: req.body });

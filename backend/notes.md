@@ -37,6 +37,146 @@
 
 ## Goals
 
+### Route: Delete a Review Image
+
+#### Notes
+
+- Requires authentication
+
+- Requires authorization
+
+- Goes in 'reviewImages router', route is api/review-images/:imageId
+
+#### Plan
+
+- Fetch userId from req.user.id
+
+- Fetch imageId from route parameters
+
+- Fetch the reviewImage using imageId
+
+- If there is no reviewImage with the specified id, return this 404 response:
+
+```json
+{
+  "message": "Review Image couldn't be found"
+}
+```
+
+- Use the .destroy method on the reviewImage
+
+- return this json response:
+
+```json
+{
+  "message": "Successfully deleted"
+}
+```
+
+#### Setup
+
+```js
+router.delete("/:imageId", requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const imageId = req.params.imageId;
+
+        // Get the reviewImage by imageId
+        const reviewImage = await ReviewImage.findByPk(imageId);
+
+        if (!reviewImage) {
+            return res.status(404).json({ message: "Review Image couldn't be found" });
+        }
+
+        // Get the review associated with the reviewImage
+        const review = await Review.findByPk(reviewImage.reviewId);
+
+        // Check if the current user is the owner of the review
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Use the .destroy method to delete the reviewImage
+        await reviewImage.destroy();
+
+        res.status(200).json({ message: "Successfully deleted" });
+    } catch (err) {
+        next(err);
+    }
+});
+```
+
+### Route: Delete a Spot Image
+
+#### Notes
+
+- Requires authentication
+
+- Requires authorization
+
+- Goes in 'spotImages router', route is api/spot-images/:imageId
+
+#### Plan
+
+- Fetch userId from req.user.id
+
+- Fetch imageId from route parameters
+
+- Fetch the spotImage using imageId
+
+- If there is no spotImage with the specified id, return this 404 response:
+
+```json
+{
+  "message": "Successfully deleted"
+}
+```
+
+- Use the .destroy method on the spotImage
+
+- return this json response:
+
+```json
+{
+  "message": "Successfully deleted"
+}
+```
+
+#### Setup
+
+```js
+router.delete("/:imageId", requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const imageId = req.params.imageId;
+
+        // Get the spotImage by imageId
+        const spotImage = await SpotImage.findByPk(imageId);
+
+        if (!spotImage) {
+            return res.status(404).json({ message: "Spot Image couldn't be found" });
+        }
+
+        // Get the spot associated with the spotImage
+        const spot = await Spot.findByPk(spotImage.spotId);
+
+        // Check if the current user is the owner of the spot
+        if (spot.ownerId !== userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        // Use the .destroy method to delete the spotImage
+        await spotImage.destroy();
+
+        res.status(200).json({ message: "Successfully deleted" });
+    } catch (err) {
+        next(err);
+    }
+});
+```
+
+---
+
 ### Route: Delete a Review
 
 #### Notes
