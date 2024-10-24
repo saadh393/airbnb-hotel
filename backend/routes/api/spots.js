@@ -244,7 +244,7 @@ router.get('/:spotId', async (req, res, next) => {
 
         const spotData = spot.toJSON(); // convert our spot into a POJO
 
-        const avgRating = spotData.Reviews && spotData.Reviews.length > 0 // Check to see if Reviews exists and make sure that it isn't empty
+        const avgStarRating = spotData.Reviews && spotData.Reviews.length > 0 // Check to see if Reviews exists and make sure that it isn't empty
 
             ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length // If there are reviews, we use the reduce method to add up all of the stars from all of the reviews corresponding to the current spot, then divide that number by the total number of reviews in order to get the average rating.
 
@@ -258,7 +258,7 @@ router.get('/:spotId', async (req, res, next) => {
         const spotDetails = { // Use the spread operator to include all of the properties from our spotData (the details of the current spot) into our new object, 'spotDetails'
             ...spotData,
             numReviews,
-            avgRating, // then we add the avgRating and previewImage properties to our new 'spotDetails' object as well
+            avgStarRating, // then we add the avgStarRating and previewImage properties to our new 'spotDetails' object as well
             // previewImage
         };
 
