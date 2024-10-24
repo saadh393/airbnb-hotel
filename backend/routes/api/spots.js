@@ -114,23 +114,41 @@ router.get("/", async (req, res, next) => {
             ...pagination
         });
 
+        // const spotList = spots.map(spot => {
+
+        //     const spotData = spot.toJSON();
+
+        //     const avgRating = spotData.Reviews && spotData.Reviews.length > 0
+        //     ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length
+        //     : 0;
+
+        //     const previewImage = spot.SpotImages[0] ? spot.SpotImages[0].url : null;
+
+        //     delete spotData.SpotImages;
+        //     delete spotData.Reviews;
+
+        //     return {
+        //     ...spotData,
+        //     avgRating,
+        //     previewImage
+        //     };
+        // });
+
         const spotList = spots.map(spot => {
-
             const spotData = spot.toJSON();
-
             const avgRating = spotData.Reviews && spotData.Reviews.length > 0
-            ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length
-            : 0;
-
+                ? spotData.Reviews.reduce((acc, review) => acc + review.stars, 0) / spotData.Reviews.length
+                : 0;
             const previewImage = spot.SpotImages[0] ? spot.SpotImages[0].url : null;
-
             delete spotData.SpotImages;
             delete spotData.Reviews;
-
             return {
-            ...spotData,
-            avgRating,
-            previewImage
+                ...spotData,
+                lat: parseFloat(spotData.lat), // cast to number
+                lng: parseFloat(spotData.lng), // cast to number
+                price: parseFloat(spotData.price), // cast to number
+                avgRating,
+                previewImage
             };
         });
 
