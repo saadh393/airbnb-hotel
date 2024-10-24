@@ -114,7 +114,7 @@ router.put('/:reviewId',requireAuth,async(req,res,next)=>{
             review.stars = stars
         }
         await review.save();
-        res.status(201).json(review)
+        res.status(200).json(review)
     }
     catch(err){
         next(err)
