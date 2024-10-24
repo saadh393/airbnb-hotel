@@ -2,11 +2,15 @@
 
 ## Questions
 
-- Delete a Spot route works correctly on local environment, but fails on live environment because it validates foreign key constraint on spotImages table. We are thinking about adding an onDelete: cascade statement within the .destroy method of the route handler.
+- Do we need to change (or alias) avgRating to avgStarRating for 'Get Details of a Spot from an id', since for some reason API docs specify a response body with an attribute called 'avgStarRating' instead of 'avgRating'?
 
-- Why does Render.com no longer automatically re-deploy when we push to github? We changed the branch from main to dev, but it does not automatically re-deploy when we push to dev.
+- With respect to error messages, is it ok when they do not say exactly what is stated in the API docs as long as they convey the correct message? (for example, "Please provide a valid email" vs "Invalid email")
 
-- Are we able to change Raihan's repo url so that he is able to re-deploy from my repo (which we are sharing as our joint project repo)?
+- ~~Delete a Spot route works correctly on local environment, but fails on live environment because it validates foreign key constraint on spotImages table. We are thinking about adding an onDelete: cascade statement within the .destroy method of the route handler.~~
+
+- ~~Why does Render.com no longer automatically re-deploy when we push to github? We changed the branch from main to dev, but it does not automatically re-deploy when we push to dev.~~
+
+- ~~Are we able to change Raihan's repo url so that he is able to re-deploy from my repo (which we are sharing as our joint project repo)?~~
 
 - ~~A dev branch already exists in my github repo, but Raihan isn't able to pull that branch or access it. Should he create his own dev branch on his end? Or is there a way that he can access the same dev branch that I"m working on~~?
 
@@ -37,7 +41,99 @@
 
 ## Goals
 
-### Route: Add Query Filters to Get All Spots
+### Successful Response Body Evaluations:
+
+#### Authorization
+
+- Done (Forbidden vs Unauthorized??)
+
+#### Get the Current User
+
+- remove the 'createdAt' and 'updatedAt' attributes of the user from the response
+
+#### Log in a User
+
+- remove the 'createdAt' and 'updatedAt' attributes of the user from the response
+
+#### Sign Up a User
+
+- remove the 'createdAt' and 'updatedAt' attributes of the user from the response
+
+- remove 'title' key from error response
+
+- (error message for failing unique constraint for username) instead of 'Validation error,' the 'message' attribute of the errors object should say, 'User already exists'
+
+#### Get All Spots
+
+- Done
+
+#### Get all Spots owned by the Current User
+
+- Done
+
+### Get Details of a Spot from an ID
+
+- change 'avgRating' to 'avgStarRating'
+
+#### Create a Spot
+
+- Done
+
+#### Add an Image to a Spot based on the Spot's id
+
+- Remove 'spotId', 'createdAt', and 'updatedAt' attributes from response body
+
+#### Edit a Spot
+
+- Done
+
+#### Delete a Spot
+
+- Done
+
+#### Get All Reviews of the Current User
+
+- Done
+
+### Get All Reviews by a Spot's id
+
+- Done
+
+### Create a Review for a Spot based on the Spot's id
+
+- Done
+
+#### Add an Image to a Review based on the Review's id
+
+- Remove "reviewId", updatedAt, and createdAt from success response body
+
+#### Edit a Review
+
+- Done
+
+#### Delte a Review
+
+- Done
+
+#### Delete a SpotImage
+
+- Done
+
+#### Delete a ReviewImage
+
+- Done
+
+#### Pagination
+
+- Done
+
+#### Query Parameters
+
+- Done
+
+---
+
+### ~~Route: Add Query Filters to Get All Spots~~
 
 #### Setup
 
@@ -54,7 +150,7 @@ router.get("/", async (req, res, next) => {
             minPrice,
             maxPrice
         } = req.query; // extract query parameters from req.query
-        
+
         // apply pagination with default values and validate them
         const pagination = {};
 
@@ -120,7 +216,7 @@ router.get("/", async (req, res, next) => {
 });
 ```
 
-### Route: Delete a Review Image
+### ~~Route: Delete a Review Image~~
 
 #### Notes
 
@@ -189,7 +285,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
 });
 ```
 
-### Route: Delete a Spot Image
+### ~~Route: Delete a Spot Image~~
 
 #### Notes
 
@@ -260,7 +356,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
 
 ---
 
-### Route: Delete a Review
+### ~~Route: Delete a Review~~
 
 #### Notes
 
@@ -332,7 +428,7 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
 module.exports = router;
 ```
 
-### Route: Edit a Review
+### ~~Route: Edit a Review~~
 
 #### Notes
 
@@ -420,7 +516,7 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
 });
 ```
 
-### Route: Add an Image to a Review based on the Review's id
+### ~~Route: Add an Image to a Review based on the Review's id~~
 
 #### Notes
 
