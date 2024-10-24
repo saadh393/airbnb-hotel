@@ -7,15 +7,27 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(
         models.Spot,
-        { foreignKey: 'ownerId' }
+        {
+          foreignKey: 'ownerId',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
+         }
       );
       User.hasMany(
         models.Booking,
-        { foreignKey: 'userId' }
+        {
+          foreignKey: 'userId',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
+         }
       );
       User.hasMany(
         models.Review,
-        { foreignKey: 'userId' }
+        {
+          foreignKey: 'userId',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
+         }
       );
     }
   }
@@ -117,10 +129,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       scopes: {
         currentUser: {
-          attributes: { exclude: ["hashedPassword"] }
+          attributes: { exclude: ["hashedPassword", "createdAt", "updatedAt"] }
         },
         loginUser: {
-          attributes: {}
+          attributes: { exclude: ["createdAt", "updatedAt"] }
         }
       }
     }

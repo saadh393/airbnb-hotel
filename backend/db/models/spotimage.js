@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 const {
   Model, Validator
@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       SpotImage.belongsTo(
         models.Spot,
-        { foreignKey: 'spotId' }
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
+        }
       )
     }
   }
