@@ -108,7 +108,8 @@ module.exports = (sequelize, DataTypes) => {
           args: [90],
           msg: 'Latitude must be within -90 and 90'
         },
-        notNull: { msg: 'Latitude must be within -90 and 90' }
+        notNull: { msg: 'Latitude must be within -90 and 90' },
+        isInt: true
       }
     },
     lng: {
@@ -124,7 +125,8 @@ module.exports = (sequelize, DataTypes) => {
           args: [180],
           msg: 'Longitude must be within -180 and 180'
         },
-        notNull: { msg: 'Longitude must be within -180 and 180' }
+        notNull: { msg: 'Longitude must be within -180 and 180' },
+        isInt: true
       }
     },
     name: {

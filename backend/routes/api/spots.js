@@ -496,7 +496,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
         const spot = await Spot.findByPk(spotId);
 
         if (!spot) {
-            return res.status(404).json({message: "Spot could not be found"})
+            return res.status(404).json({message: "Spot couldn't be found"})
         }
 
         let existingReview = await Review.findOne({
