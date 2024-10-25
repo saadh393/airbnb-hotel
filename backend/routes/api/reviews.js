@@ -103,30 +103,43 @@ router.post('/:reviewId/images',requireAuth,async(req,res,next)=>{
 
 //! Edit a Review
 
-router.put('/:reviewId',requireAuth,async(req,res,next)=>{
+const validateReviewR = [
+    check('review').notEmpty().withMessage('Review text is required'),
+    check('stars').isInt({ min: 1, max: 5 }).withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors // Middleware for validation error handling
+];
+
+router.put('/:reviewId', requireAuth, validateReviewR, async(req, res, next) => {
     try{
         const reviewId = req.params.reviewId;
         const userId = req.user.id;
 
         const review = await Review.findByPk(reviewId);
-        if(!review){
+
+        if (!review) {
             return res.status(404).json({
                 message:"Review couldn't be found"
             })
         }
-        if(review.userId !== userId){
+
+        if (review.userId !== userId) {
             return res.status(403).json({
                 message:"Unauthorized"
             })
         }
-        const {review:newReview,stars} = req.body;
-        if(newReview){
+
+        const { review: newReview, stars } = req.body;
+
+        if (newReview) {
             review.review = newReview;
         }
-        if(stars){
+
+        if (stars) {
             review.stars = stars
         }
+
         await review.save();
+
         res.status(200).json(review)
     }
     catch(err){
