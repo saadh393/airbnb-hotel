@@ -81,28 +81,89 @@ router.get("/", async (req, res, next) => {
         // apply pagination with default values and validate them
         const pagination = {};
 
+        // if (parseInt(page, 10) >= 1 && parseInt(size, 10) >= 1 && parseInt(size, 10) <= 20) {
+        //     pagination.limit = parseInt(size, 10);
+        //     pagination.offset = (parseInt(page, 10) - 1) * parseInt(size, 10);
+        // } else {
+        //     return res.status(400).json({
+        //         message: "Bad Request",
+        //         errors: {
+        //             page: "Page must be greater than or equal to 1",
+        //             size: "Size must be between 1 and 20"
+        //         }
+        //     });
+        // }
+
+        //! Test
+
+        // Apply filters (lat, long, price) if provided and valid
+        // const where = {};
+
+        // if (minLat) where.lat = { [Op.gte]: parseFloat(minLat) };
+        // if (maxLat) where.lat = { [Op.lte]: parseFloat(maxLat) };
+        // if (minLng) where.lng = { [Op.gte]: parseFloat(minLng) };
+        // if (maxLng) where.lng = { [Op.lte]: parseFloat(maxLng) };
+        // if (minPrice && parseFloat(minPrice) >= 0) where.price = { [Op.gte]: parseFloat(minPrice) };
+        // if (maxPrice && parseFloat(maxPrice) >= 0) where.price = { [Op.lte]: parseFloat(maxPrice) };
+
+        //! test
+
+        const errors = {};
+
         if (parseInt(page, 10) >= 1 && parseInt(size, 10) >= 1 && parseInt(size, 10) <= 20) {
             pagination.limit = parseInt(size, 10);
             pagination.offset = (parseInt(page, 10) - 1) * parseInt(size, 10);
         } else {
-            return res.status(400).json({
-                message: "Bad Request",
-                errors: {
-                    page: "Page must be greater than or equal to 1",
-                    size: "Size must be between 1 and 20"
-                }
-            });
+            errors.page = "Page must be greater than or equal to 1";
+            errors.size = "Size must be between 1 and 20";
         }
 
         // Apply filters (lat, long, price) if provided and valid
         const where = {};
 
-        if (minLat) where.lat = { [Op.gte]: parseFloat(minLat) };
-        if (maxLat) where.lat = { [Op.lte]: parseFloat(maxLat) };
-        if (minLng) where.lng = { [Op.gte]: parseFloat(minLng) };
-        if (maxLng) where.lng = { [Op.lte]: parseFloat(maxLng) };
-        if (minPrice && parseFloat(minPrice) >= 0) where.price = { [Op.gte]: parseFloat(minPrice) };
-        if (maxPrice && parseFloat(maxPrice) >= 0) where.price = { [Op.lte]: parseFloat(maxPrice) };
+        if (minLat && (isNaN(minLat) || minLat < -90 || minLat > 90)) {
+            errors.minLat = "minLat must be a number between -90 and 90";
+        } else if (minLat) {
+            where.lat = { [Op.gte]: parseFloat(minLat) };
+        }
+
+        if (maxLat && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) {
+            errors.maxLat = "maxLat must be a number between -90 and 90";
+        } else if (maxLat) {
+            where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
+        }
+
+        if (minLng && (isNaN(minLng) || minLng < -180 || minLng > 180)) {
+            errors.minLng = "minLng must be a number between -180 and 180";
+        } else if (minLng) {
+            where.lng = { [Op.gte]: parseFloat(minLng) };
+        }
+
+        if (maxLng && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) {
+            errors.maxLng = "maxLng must be a number between -180 and 180";
+        } else if (maxLng) {
+            where.lng = { ...where.lng, [Op.lte]: parseFloat(maxLng) };
+        }
+
+        if (minPrice && (isNaN(minPrice) || minPrice < 0)) {
+            errors.minPrice = "minPrice must be a number greater than or equal to 0";
+        } else if (minPrice) {
+            where.price = { [Op.gte]: parseFloat(minPrice) };
+        }
+
+        if (maxPrice && (isNaN(maxPrice) || maxPrice < 0)) {
+            errors.maxPrice = "maxPrice must be a number greater than or equal to 0";
+        } else if (maxPrice) {
+            where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
+        }
+
+        // If there are validation errors, return them
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({
+                message: "Bad Request",
+                errors
+            });
+        }
 
         // use spot.findAll() with the 'where' clause and 'pagination' applied.
         const spots = await Spot.findAll({
