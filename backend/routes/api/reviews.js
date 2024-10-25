@@ -2,6 +2,7 @@ const express = require('express');
 
 const { Review, ReviewImage, SpotImage, Spot, User, sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { check, validationResult } = require('express-validator');
 const router = express.Router();
 
 //! Get All Reviews of Current User
