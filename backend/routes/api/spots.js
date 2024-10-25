@@ -415,37 +415,46 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
 
 //! Edit Spot
 
-router.put('/:spotId',requireAuth,async(req,res,next)=>{
-    try{
+router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
+    try {
         const spotId = req.params.spotId;
         const userId = req.user.id;
         // const spot = await Spot.findByPk(spotId);
+
         const spot = await Spot.findOne({
             where: {
                 id: spotId
             }
-        })
-        if(!spot){
-           return res.status(404).json({
-            message:"Spot couldn't be found"
-           })
+        });
+
+        if (!spot) {
+            return res.status(404).json({
+                message: "Spot couldn't be found"
+            });
         }
-        if (spot.ownerId !== userId){
+
+        if (spot.ownerId !== userId) {
             return res.status(403).json({
-                message:"Unauthorized"
-            })
+                message: "Unauthorized"
+            });
         }
-        const {address,city,state,country,lat,lng,name,description,price} = req.body;
-        if(address) spot.address = address;
-        if(state) spot.state = state;
-        if(city)spot.city =city;
-        if(country)spot.country = country;
-        if(lat) spot.lat = lat;
-        if(lng) spot.lng = lng;
-        if(name) spot.name = name;
-        if(description) spot.description = description;
-        if(price) spot.price = price
+
+        const { address, city, state, country, lat, lng, name, description, price } = req.body;
+
+        // if (address) spot.address = address;
+        // if(state) spot.state = state;
+        // if (city) spot.city = city;
+        // if (country) spot.country = country;
+        // if (lat) spot.lat = lat;
+        // if (lng) spot.lng = lng;
+        // if (name) spot.name = name;
+        // if (description) spot.description = description;
+        // if (price) spot.price = price;
+
+        Object.assign(spot, { address, city, state, country, lat, lng, name, description, price });
+
         await spot.save();
+
         res.json(spot);
     }
     catch(err){
