@@ -348,23 +348,7 @@ router.post("/", requireAuth,validateSpot, async (req, res, next) => {
             price
         });
 
-        const response = {
-            id: newSpot.id,
-            ownerId: newSpot.ownerId,
-            address: newSpot.address,
-            city: newSpot.city,
-            state: newSpot.state,
-            country: newSpot.country,
-            lat: parseFloat(newSpot.lat),
-            lng: parseFloat(newSpot.lng),
-            name: newSpot.name,
-            description: newSpot.description,
-            price: parseFloat(newSpot.price),
-            createdAt: newSpot.createdAt,
-            updatedAt: newSpot.updatedAt
-        };
-
-        res.status(201).json(response);
+        res.status(201).json(newSpot);
 
     } catch(err) {
         next(err);
