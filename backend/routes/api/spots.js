@@ -325,7 +325,7 @@ router.get('/:spotId', async (req, res, next) => {
 //     handleValidationErrors // This middleware handles validation errors
 //   ];
 
-router.post("/", requireAuth,validateSpot, async (req, res, next) => {
+router.post("/", requireAuth, async (req, res, next) => {
 
     try {
 
