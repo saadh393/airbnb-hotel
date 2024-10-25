@@ -551,7 +551,13 @@ router.get('/:spotId/reviews', async (req, res, next) => {
 
 //! Create a Review for a Spot based on the Spot's ID
 
-router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
+const validateReview = [
+    check('review').notEmpty().withMessage('Review text is required'),
+    check('stars').isInt({ min: 1, max: 5 }).withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors // Middleware for validation error handling
+];
+
+router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
 
     try {
 
@@ -578,10 +584,11 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
         })
 
         if (existingReview) {
-            return res.status(500).json({message: "User already has a review for this spot"})
+            return res.status(400).json({message: "User already has a review for this spot"})
         }
 
         const { review, stars } = req.body
+
 
         const newReview = await Review.create({
             spotId: spotId,
