@@ -99,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(10,7),
       allowNull: false,
       validate: {
-        isDecimal: true,
+        isFloat: true,
         min: {
           args: [-90],
           msg: 'Latitude must be within -90 and 90'
@@ -108,14 +108,15 @@ module.exports = (sequelize, DataTypes) => {
           args: [90],
           msg: 'Latitude must be within -90 and 90'
         },
-        notNull: { msg: 'Latitude must be within -90 and 90' }
+        notNull: { msg: 'Latitude must be within -90 and 90' },
+        isInt: true
       }
     },
     lng: {
       type: DataTypes.DECIMAL(10,7),
       allowNull: false,
       validate: {
-        isDecimal: true,
+        isFloat: true,
         min: {
           args: [-180],
           msg: 'Longitude must be within -180 and 180'
@@ -124,7 +125,8 @@ module.exports = (sequelize, DataTypes) => {
           args: [180],
           msg: 'Longitude must be within -180 and 180'
         },
-        notNull: { msg: 'Longitude must be within -180 and 180' }
+        notNull: { msg: 'Longitude must be within -180 and 180' },
+        isInt: true
       }
     },
     name: {
@@ -150,7 +152,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(10,2),
       allowNull: false,
       validate: {
-        isDecimal: true,
+        isFloat: true,
         min: {
           args: [0.01],
           msg: 'Price must be a positive number'
