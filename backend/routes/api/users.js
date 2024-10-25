@@ -24,8 +24,9 @@ const validateSignup = [
     .isLength({ min: 4 })
     .withMessage('Please provide a username with at least 4 characters.'),
   check('username')
-    .notEmpty()
+    .exists()
     .withMessage('Username is required')
+    .not()
     .isEmail()
     .withMessage('Username cannot be an email.'),
   check('password')
