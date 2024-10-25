@@ -401,7 +401,12 @@ router.put('/:spotId',requireAuth,async(req,res,next)=>{
     try{
         const spotId = req.params.spotId;
         const userId = req.user.id;
-        const spot = await Spot.findByPk(spotId);
+        // const spot = await Spot.findByPk(spotId);
+        const spot = await Spot.findOne({
+            where: {
+                id: spotId
+            }
+        })
         if(!spot){
            return res.status(404).json({
             message:"Spot couldn't be found"
