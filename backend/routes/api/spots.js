@@ -348,7 +348,14 @@ router.post("/", requireAuth, validateSpot, async (req, res, next) => {
             price
         });
 
-        res.status(201).json(newSpot);
+        // const spot = await Spot.findByPk(newSpot.id);
+        const spot = await Spot.findOne({
+            where: {
+                id: newSpot.id
+            }
+        })
+
+        res.status(201).json(spot);
 
     } catch(err) {
         next(err);
