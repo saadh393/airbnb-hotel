@@ -327,6 +327,8 @@ router.get('/:spotId', async (req, res, next) => {
 
 router.post("/", requireAuth, async (req, res, next) => {
 
+    //! Add 'validateSpot after requireAuth if we want to use the helper function
+
     try {
 
         const ownerId = req.user.id;
