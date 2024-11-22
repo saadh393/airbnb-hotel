@@ -19,23 +19,24 @@ module.exports = (sequelize, DataTypes) => {
           onDelete: 'CASCADE',
           onUpdate: 'CASCADE'
         }
-      ),
-        Spot.hasMany(
-          models.SpotImage,
-          {
-            foreignKey: 'spotId',
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          }
-        ),
-        Spot.hasMany(
-          models.Booking,
-          {
-            foreignKey: 'spotId',
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          }
-      )
+      );
+      Spot.hasMany(
+        models.SpotImage,
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE',
+          hooks: true
+        }
+      );
+      Spot.hasMany(
+        models.Booking,
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE',
+          onUpdate: 'CASCADE'
+        }
+      );
       Spot.hasMany(
         models.Review,
         {
@@ -43,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           onDelete: 'CASCADE',
           onUpdate: 'CASCADE'
         }
-      )
+      );
     }
   }
   Spot.init({
@@ -109,7 +110,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Latitude must be within -90 and 90'
         },
         notNull: { msg: 'Latitude must be within -90 and 90' },
-        isInt: true
+        // isInt: true
       }
     },
     lng: {
@@ -126,7 +127,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Longitude must be within -180 and 180'
         },
         notNull: { msg: 'Longitude must be within -180 and 180' },
-        isInt: true
+        // isInt: true
       }
     },
     name: {
