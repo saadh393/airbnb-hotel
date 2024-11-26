@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
+// frontend/src/App.jsx
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { Outlet } from "react-router-dom"
-import LoginFormPage from "./components/LoginFormPage/LoginFormPage"
-import SignupFormPage from "./components/SignupFormPage/SignupForm"
-import Navigation from "./components/Navigation/Navigation"
+import { useState, useEffect } from "react"
+import { useDispatch } from "react-redux"
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"
+import SignupFormPage from "./components/SignupFormPage/SignupForm.jsx"
+import Navigation from "./components/Navigation/Navigation.jsx"
 import * as sessionActions from "./store/session"
 
 function Layout() {
@@ -25,6 +24,7 @@ function Layout() {
     </>
   )
 }
+
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -34,16 +34,13 @@ const router = createBrowserRouter([
         element: <h1>Welcome!</h1>
       },
       {
-        path: "/login",
-        element: <LoginFormPage />
-      },
-      {
-        path: "/signup",
+        path: "signup",
         element: <SignupFormPage />
       }
     ]
   }
 ])
+
 function App() {
   return <RouterProvider router={router} />
 }
