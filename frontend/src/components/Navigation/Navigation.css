@@ -1,0 +1,54 @@
+/* Navigation bar container */
+ul {
+  display: flex;
+  justify-content: space-between; /* Align items on both sides */
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 10px 20px;
+  background-color: #007bff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 60px; /* Explicit height for spacing */
+}
+
+/* Home link (left side) */
+ul > li:first-child {
+  flex: 1;
+}
+
+ul > li:first-child a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+ul > li:first-child a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons container (right side) */
+ul > li:last-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+ul > li:last-child button {
+  padding: 8px 15px;
+  background-color: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+ul > li:last-child button:hover {
+  background-color: #0056b3;
+  color: white;
+}
