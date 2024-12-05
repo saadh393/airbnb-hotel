@@ -25,6 +25,7 @@ const spotsReducer = (state = {}, action) => {
         ...allSpots
       }
     }
+
     default:
       return state
   }
