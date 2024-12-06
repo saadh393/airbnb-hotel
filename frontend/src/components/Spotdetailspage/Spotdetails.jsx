@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { fetchSpotDetails } from "../../store/spotDetails"
-import styles from "./SpotDetails.module.css" // Import CSS Module
+import styles from "./SpotDetails.module.css"
 
 function SpotDetails() {
   const { spotId } = useParams()
@@ -23,13 +23,11 @@ function SpotDetails() {
 
   return (
     <div className={styles.container}>
-      {/* Spot Header */}
       <h1 className={styles.title}>{spotDetails.name}</h1>
       <p className={styles.location}>
         Location: {spotDetails.city}, {spotDetails.state}, {spotDetails.country}
       </p>
 
-      {/* Images Section */}
       <div className={styles.images}>
         {mainImage && (
           <div className={styles.mainImage}>
@@ -48,7 +46,6 @@ function SpotDetails() {
         </div>
       </div>
 
-      {/* Host Info */}
       <div className={styles.hostSection}>
         <h2>
           Hosted by {spotDetails.Owner.firstName} {spotDetails.Owner.lastName}
@@ -56,7 +53,6 @@ function SpotDetails() {
         <p>{spotDetails.description}</p>
       </div>
 
-      {/* Callout Section */}
       <div className={styles.calloutBox}>
         <div className={styles.price}>
           <span>${spotDetails.price}</span> / night
