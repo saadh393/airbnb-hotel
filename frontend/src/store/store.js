@@ -4,13 +4,15 @@ import sessionReducer from "./session"
 import spotsReducer from "./spots"
 import spotDetailsReducer from "./spotDetails"
 import createSpotsReducer from "./createspot"
+import reviewsReducer from "./reviews"
 
 const rootReducer = combineReducers({
   // ADD REDUCERS HERE
   session: sessionReducer,
   spots: spotsReducer,
   spotDetails: spotDetailsReducer,
-  createSpot: createSpotsReducer
+  createSpot: createSpotsReducer,
+  reviews: reviewsReducer
 })
 
 let enhancer
