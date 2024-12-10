@@ -85,6 +85,8 @@ import { useParams } from "react-router-dom"
 import { fetchSpotDetails } from "../../store/spotDetails"
 import OpenModalButton from "../OpenModalButton/OpenModalButton"
 import ReviewModal from "../ReviewModal/ReviewModal"
+import ReviewList from "./ReviewList"
+import FeatureCommingSoon from "./FeatureCommingSoon"
 
 function SpotDetails() {
   const { spotId } = useParams()
@@ -92,6 +94,7 @@ function SpotDetails() {
 
   const spotDetails = useSelector(state => state.spotDetails)
   const sessionUser = useSelector(state => state.session.user)
+  const reviews = useSelector(state => state.reviews)
 
   useEffect(() => {
     dispatch(fetchSpotDetails(spotId))
@@ -107,8 +110,8 @@ function SpotDetails() {
   return (
     <div className="spot-details">
       <h1>{spotDetails.name}</h1>
-      <p>
-        Location: {spotDetails.city}, {spotDetails.state}, {spotDetails.country}
+      <p style={{ color: "gray" }}>
+        {spotDetails.city}, {spotDetails.state}, {spotDetails.country}
       </p>
 
       <div className="spot-images">
@@ -117,32 +120,51 @@ function SpotDetails() {
         ))}
       </div>
 
-      <div>
-        <h2>
-          Hosted by {spotDetails.Owner.firstName} {spotDetails.Owner.lastName}
-        </h2>
-        <p>{spotDetails.description}</p>
-      </div>
+      <section className="sport-details-row">
+        <section>
+          <div>
+            <h2>
+              Hosted by {spotDetails.Owner.firstName}{" "}
+              {spotDetails.Owner.lastName}
+            </h2>
+            <p>{spotDetails.description}</p>
+          </div>
 
-      <div className="reviews">
-        <h2>Reviews</h2>
-        {!isOwner && !hasPostedReview && sessionUser && (
-          <OpenModalButton
-            modalComponent={<ReviewModal spotId={spotId} />}
-            buttonText="Post Your Review"
-          />
-        )}
-        {spotDetails.Reviews && spotDetails.Reviews.length > 0 ? (
-          spotDetails.Reviews.map(review => (
-            <div key={review.id}>
-              <p>{review.review}</p>
-              <p>{review.stars} ★</p>
+          <div className="reviews">
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <h2>Reviews</h2>
+              {!isOwner && !hasPostedReview && sessionUser && (
+                <OpenModalButton
+                  modalComponent={<ReviewModal spotId={spotId} />}
+                  buttonText="Post Your Review"
+                />
+              )}
             </div>
-          ))
-        ) : (
-          <p>No reviews yet. Be the first to post a review!</p>
-        )}
-      </div>
+
+            <ReviewList reviews={reviews} spotDetails={spotDetails} />
+          </div>
+        </section>
+
+        <div className="callout">
+          <div className="callout-row">
+            <div>
+              <span className="callout-price">${spotDetails.price}</span>
+              <span>/ night</span>
+            </div>
+            <span>
+              {spotDetails.avgStarRating
+                ? `${spotDetails.avgStarRating}(${
+                    spotDetails.numReviews
+                  }) ${"★".repeat(spotDetails.avgStarRating)}`
+                : "New"}
+            </span>
+          </div>
+          <OpenModalButton
+            modalComponent={<FeatureCommingSoon />}
+            buttonText="Reserve"
+          />
+        </div>
+      </section>
     </div>
   )
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { loadSpotsData } from "../../store/spots"
-import styles from "./landingpage.module.css"
+import "./landingpage.css"
+import { Link } from "react-router-dom"
 
 function LandingPageSpots() {
   const dispatch = useDispatch()
@@ -23,28 +24,36 @@ function LandingPageSpots() {
   }, [dispatch])
 
   return (
-    <div className={styles.container}>
+    <div className="spot-card-container">
       {spots.map(spot => (
-        <div key={spot.id} title={spot.name} className={styles.card}>
+        <Link
+          to={`/spots/${spot.id}`}
+          key={spot.id}
+          title={spot.name}
+          className="spot-card"
+        >
           <img
             src={spot.previewImage}
             alt={spot.name}
-            className={styles.image}
+            className="spot-card-image"
           />
-          <div className={styles.details}>
-            <div className={styles.location}>
+          <div className="spot-card-details">
+            <div className="spot-card-rating">
+              {spot.avgRating
+                ? `${spot.avgRating} ${"★".repeat(Math.round(spot.avgRating))}`
+                : "New"}
+            </div>
+            <div className="spot-card-location">
               <span>
                 {spot.city}, {spot.state}
               </span>
             </div>
-            <div className={styles.price}>
-              <span>${spot.price}.00</span> <span>night</span>
-            </div>
-            <div className={styles.rating}>
-              {spot.avgRating ? `${spot.avgRating} ★` : "New"}
+            <div className="spot-card-price">
+              <span>${spot.price}.00</span>
+              <span>night</span>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   )

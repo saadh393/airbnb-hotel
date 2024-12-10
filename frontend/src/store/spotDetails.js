@@ -1,3 +1,5 @@
+import { bulkAddReviews } from "./reviews"
+
 const LOAD_SPOT_DETAILS = "spotDetails/LOAD_SPOT_DETAILS"
 
 const loadSpotDetails = spot => ({
@@ -11,6 +13,9 @@ export const fetchSpotDetails = id => async dispatch => {
     const spot = await response.json()
     console.log("spot", spot)
     dispatch(loadSpotDetails(spot))
+    if (spot.Reviews.length > 0) {
+      dispatch(bulkAddReviews(spot.Reviews))
+    }
   }
 }
 

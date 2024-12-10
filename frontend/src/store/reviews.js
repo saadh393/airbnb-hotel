@@ -2,12 +2,20 @@ import { csrfFetch } from "./csrf"
 
 // Action Type
 const ADD_REVIEW = "reviews/ADD_REVIEW"
+const BULK_ADD_REVIEWS = "reviews/BULK_ADD_REVIEWS"
 
 // Action Creator
 const addReview = review => ({
   type: ADD_REVIEW,
   review
 })
+
+export const bulkAddReviews = reviews => {
+  return {
+    type: BULK_ADD_REVIEWS,
+    reviews
+  }
+}
 
 // Thunk Action (createReview)
 export const createReview = (spotId, reviewData) => async dispatch => {
@@ -19,6 +27,8 @@ export const createReview = (spotId, reviewData) => async dispatch => {
       body: JSON.stringify(reviewData)
     })
 
+    // console.log("Server response:", response.ok); // Debug log
+
     if (response.ok) {
       const newReview = await response.json()
       dispatch(addReview(newReview))
@@ -29,17 +39,29 @@ export const createReview = (spotId, reviewData) => async dispatch => {
       return { errors: error.errors || error }
     }
   } catch (err) {
-    console.error("Request Failed:", err) // Debug log
-    return { errors: err.message || "Unexpected error occurred" }
+    const errorMessage = await err.json()
+    return { errors: errorMessage.message || "Unexpected error occurred" }
   }
 }
 
 // Reducer
-const reviewsReducer = (state = {}, action) => {
+const reviewsReducer = (state = [], action) => {
   switch (action.type) {
     case ADD_REVIEW: {
-      const newState = { ...state }
-      newState[action.review.id] = action.review
+      return [...state, action.review]
+    }
+
+    case BULK_ADD_REVIEWS: {
+      // Use Set to create Unique Array of Reviews
+      const newState = [...state]
+      const reviewSet = new Set(newState.map(review => review.id))
+      action.reviews.forEach(review => {
+        if (!reviewSet.has(review.id)) {
+          newState.push(review)
+          reviewSet.add(review.id)
+        }
+      })
+
       return newState
     }
     default:
