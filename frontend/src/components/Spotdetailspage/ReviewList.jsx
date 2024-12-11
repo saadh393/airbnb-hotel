@@ -1,21 +1,20 @@
-import React from "react"
-import Stars from "../Icons/Stars"
+import Stars from "../Icons/Stars";
 
 function ReviewList({ reviews, spotDetails }) {
-  const renderStars = stars => {
+  const renderStars = (stars) => {
     return [...Array(5)].map((_, index) => (
       <Stars key={index} filled={index < stars} />
-    ))
-  }
+    ));
+  };
 
-  const formatDate = dateString => {
-    const date = new Date(dateString)
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       date: "numeric",
       month: "long",
-      year: "numeric"
-    })
-  }
+      year: "numeric",
+    });
+  };
 
   if (!reviews || reviews.length === 0) {
     return (
@@ -23,7 +22,7 @@ function ReviewList({ reviews, spotDetails }) {
         <h3>Reviews</h3>
         <p>No reviews yet. Be the first to post a review!</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -67,7 +66,7 @@ function ReviewList({ reviews, spotDetails }) {
           ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default ReviewList
+export default ReviewList;

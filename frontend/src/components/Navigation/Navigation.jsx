@@ -1,10 +1,10 @@
-import styles from "./navigation.module.css"
-import { NavLink } from "react-router-dom"
-import { useSelector } from "react-redux"
-import ProfileButton from "./ProfileButton"
+import styles from "./navigation.module.css";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ProfileButton from "./ProfileButton";
 
 function Navigation({ isLoaded }) {
-  const sessionUser = useSelector(state => state.session.user)
+  const sessionUser = useSelector((state) => state.session.user);
 
   return (
     <nav className={styles.navContainer}>
@@ -30,21 +30,23 @@ function Navigation({ isLoaded }) {
       </ul>
       {isLoaded && (
         <div className={styles.actions}>
-          <NavLink
-            to="/spots/new"
-            className={({ isActive }) =>
-              isActive
-                ? `${styles.navLink} ${styles.activeLink}`
-                : styles.navLink
-            }
-          >
-            Create a New Spot
-          </NavLink>
+          {sessionUser && (
+            <NavLink
+              to="/spots/new"
+              className={({ isActive }) =>
+                isActive
+                  ? `${styles.navLink} ${styles.activeLink}`
+                  : styles.navLink
+              }
+            >
+              Create a New Spot
+            </NavLink>
+          )}
           <ProfileButton user={sessionUser} />
         </div>
       )}
     </nav>
-  )
+  );
 }
 
-export default Navigation
+export default Navigation;

@@ -1,8 +1,8 @@
-// import React from "react"
-import { useModal } from "../../context/Modal"
+import React from "react";
+import { useModal } from "../../context/Modal";
 
 export default function FeatureCommingSoon() {
-  const { closeModal } = useModal()
+  const { closeModal } = useModal();
   return (
     <div>
       <h2 className="modal-title">Coming Soon</h2>
@@ -14,5 +14,5 @@ export default function FeatureCommingSoon() {
         OK, Got It
       </button>
     </div>
-  )
+  );
 }
