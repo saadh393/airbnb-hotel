@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import styles from "./EditForm.module.css";
-import { createSpot, updateSpot } from "../../../store/createspot";
-import { fetchSpotDetails } from "../../../store/spotDetails";
+import { useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { useNavigate, useParams } from "react-router-dom"
+import styles from "./EditForm.module.css"
+import { createSpot, updateSpot } from "../../../store/createspot"
+import { fetchSpotDetails } from "../../../store/spotDetails"
 
 function CreateSpotForm() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { spotId } = useParams();
-  const sessionUser = useSelector((state) => state.session.user);
-  const existingSpot = useSelector((state) => state.spotDetails);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { spotId } = useParams()
+  const sessionUser = useSelector(state => state.session.user)
+  const existingSpot = useSelector(state => state.spotDetails)
 
   const [formData, setFormData] = useState({
     country: "",
@@ -24,32 +24,32 @@ function CreateSpotForm() {
     image1: "",
     image2: "",
     image3: "",
-    image4: "",
-  });
+    image4: ""
+  })
 
   const [_, setImagePreviews] = useState({
     previewImage: "",
     image1: "",
     image2: "",
     image3: "",
-    image4: "",
-  });
+    image4: ""
+  })
 
-  const [errors, setErrors] = useState({});
-  const [isEditing, setIsEditing] = useState(false);
+  const [errors, setErrors] = useState({})
+  const [isEditing, setIsEditing] = useState(false)
 
   // Check if editing an existing spot
   useEffect(() => {
     if (spotId) {
-      setIsEditing(true);
-      dispatch(fetchSpotDetails(spotId));
+      setIsEditing(true)
+      dispatch(fetchSpotDetails(spotId))
     }
-  }, [spotId, dispatch]);
+  }, [spotId, dispatch])
 
   // Populate form with existing spot data when editing
   useEffect(() => {
     if (isEditing && existingSpot) {
-      const spotImages = existingSpot.SpotImages || [];
+      const spotImages = existingSpot.SpotImages || []
       setFormData({
         country: existingSpot.country || "",
         streetAddress: existingSpot.address || "",
@@ -58,74 +58,74 @@ function CreateSpotForm() {
         description: existingSpot.description || "",
         name: existingSpot.name || "",
         price: existingSpot.price ? existingSpot.price.toString() : "",
-        previewImage: spotImages.find((img) => img.preview)?.url || "",
+        previewImage: spotImages.find(img => img.preview)?.url || "",
         image1: spotImages.length > 1 ? spotImages[1]?.url || "" : "",
         image2: spotImages.length > 2 ? spotImages[2]?.url || "" : "",
         image3: spotImages.length > 3 ? spotImages[3]?.url || "" : "",
-        image4: spotImages.length > 4 ? spotImages[4]?.url || "" : "",
-      });
+        image4: spotImages.length > 4 ? spotImages[4]?.url || "" : ""
+      })
 
       // Set image previews
       const previews = {
-        previewImage: spotImages.find((img) => img.preview)?.url || "",
+        previewImage: spotImages.find(img => img.preview)?.url || "",
         image1: spotImages.length > 1 ? spotImages[1]?.url || "" : "",
         image2: spotImages.length > 2 ? spotImages[2]?.url || "" : "",
         image3: spotImages.length > 3 ? spotImages[3]?.url || "" : "",
-        image4: spotImages.length > 4 ? spotImages[4]?.url || "" : "",
-      };
-      setImagePreviews(previews);
+        image4: spotImages.length > 4 ? spotImages[4]?.url || "" : ""
+      }
+      setImagePreviews(previews)
     }
-  }, [existingSpot, isEditing]);
+  }, [existingSpot, isEditing])
 
   // Authentication check
   useEffect(() => {
     if (!sessionUser) {
-      navigate("/login");
+      navigate("/login")
     }
-  }, [sessionUser, navigate]);
+  }, [sessionUser, navigate])
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors = {}
 
-    if (!formData.country) newErrors.country = "Country is required";
+    if (!formData.country) newErrors.country = "Country is required"
     if (!formData.streetAddress)
-      newErrors.streetAddress = "Street Address is required";
-    if (!formData.city) newErrors.city = "City is required";
-    if (!formData.state) newErrors.state = "State is required";
+      newErrors.streetAddress = "Street Address is required"
+    if (!formData.city) newErrors.city = "City is required"
+    if (!formData.state) newErrors.state = "State is required"
 
     if (!formData.description || formData.description.length < 30) {
-      newErrors.description = "Description needs 30 or more characters";
+      newErrors.description = "Description needs 30 or more characters"
     }
 
-    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.name) newErrors.name = "Name is required"
 
     if (!formData.price || parseFloat(formData.price) <= 0) {
-      newErrors.price = "Price per night is required";
+      newErrors.price = "Price per night is required"
     }
 
     if (!formData.previewImage) {
-      newErrors.previewImage = "Preview Image URL is required";
+      newErrors.previewImage = "Preview Image URL is required"
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleInputChange = e => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
 
     // Update image preview
     if (name.includes("Image")) {
-      setImagePreviews((prev) => ({
+      setImagePreviews(prev => ({
         ...prev,
-        [name]: value,
-      }));
+        [name]: value
+      }))
     }
-  };
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault()
 
     if (validateForm()) {
       const spotData = {
@@ -134,29 +134,29 @@ function CreateSpotForm() {
           formData.image1,
           formData.image2,
           formData.image3,
-          formData.image4,
-        ].filter(Boolean),
-      };
+          formData.image4
+        ].filter(Boolean)
+      }
 
       try {
-        let result;
+        let result
         if (isEditing) {
-          result = await dispatch(updateSpot(spotId, spotData));
+          result = await dispatch(updateSpot(spotId, spotData))
         } else {
-          result = await dispatch(createSpot(spotData));
+          result = await dispatch(createSpot(spotData))
         }
 
         if (result.errors) {
-          setErrors(result.errors);
+          setErrors(result.errors)
         } else {
-          navigate(`/spots/${result.id}`);
+          navigate(`/spots/${result.id}`)
         }
       } catch (error) {
-        console.error("Submission error:", error);
-        setErrors({ formError: "An unexpected error occurred" });
+        console.error("Submission error:", error)
+        setErrors({ formError: "An unexpected error occurred" })
       }
     }
-  };
+  }
 
   const isSubmitDisabled = () => {
     return (
@@ -168,8 +168,8 @@ function CreateSpotForm() {
       !formData.name ||
       !formData.price ||
       !formData.previewImage
-    );
-  };
+    )
+  }
 
   return (
     <form className={styles.formContainer} onSubmit={handleSubmit}>
@@ -179,7 +179,7 @@ function CreateSpotForm() {
       <section style={{ display: "flex", gap: 50 }}>
         <div>
           <section className={styles.formSection}>
-            <h2>Where's your place located?</h2>
+            <h2>Where s your place located?</h2>
             <p>
               Guests will only get your exact address once they booked a
               reservation.
@@ -275,7 +275,7 @@ function CreateSpotForm() {
           <section className={styles.formSection}>
             <h2>Create a title for your spot</h2>
             <p>
-              Catch guests' attention with a spot title that highlights what
+              Catch guests attention with a spot title that highlights what
               makes your place special.
             </p>
 
@@ -335,7 +335,7 @@ function CreateSpotForm() {
                   style={{
                     maxWidth: "100%",
                     minHeight: 150,
-                    objectFit: "cover",
+                    objectFit: "cover"
                   }}
                 />
                 <input
@@ -360,7 +360,7 @@ function CreateSpotForm() {
                         maxWidth: "100%",
                         minHeight: 150,
                         maxHeight: 150,
-                        objectFit: "cover",
+                        objectFit: "cover"
                       }}
                     />
                     <input
@@ -378,7 +378,7 @@ function CreateSpotForm() {
         </div>
       </section>
     </form>
-  );
+  )
 }
 
-export default CreateSpotForm;
+export default CreateSpotForm
