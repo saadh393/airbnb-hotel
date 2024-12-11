@@ -1,67 +1,67 @@
-import { useState } from "react"
-import { useDispatch } from "react-redux"
-import { createReview } from "../../store/reviews"
-import { useModal } from "../../context/Modal"
-import Stars from "../Icons/Stars"
-import "./ReviewModal.css"
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createReview } from "../../store/reviews";
+import { useModal } from "../../context/Modal";
+import Stars from "../Icons/Stars";
+import "./ReviewModal.css";
 
 function ReviewModal({ spotId }) {
-  const dispatch = useDispatch()
-  const { closeModal } = useModal()
+  const dispatch = useDispatch();
+  const { closeModal } = useModal();
 
-  const [comment, setComment] = useState("")
-  const [rating, setRating] = useState(0)
-  const [hover, setHover] = useState(0)
-  const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
     if (comment.trim().length < 10) {
-      newErrors.comment = "Review must be at least 10 characters long"
+      newErrors.comment = "Review must be at least 10 characters long";
     }
 
     if (rating < 1) {
-      newErrors.rating = "Please select a rating"
+      newErrors.rating = "Please select a rating";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const handleSubmit = async e => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       const reviewData = {
         review: comment.trim(),
-        stars: rating
-      }
+        stars: rating,
+      };
 
-      const response = await dispatch(createReview(spotId, reviewData))
-      console.log("response from createReview:", response)
+      const response = await dispatch(createReview(spotId, reviewData));
+      console.log("response from createReview:", response);
 
       if (response.errors) {
-        setErrors({ submit: response.errors })
-        setIsSubmitting(false)
+        setErrors({ submit: response.errors });
+        setIsSubmitting(false);
       } else {
-        closeModal()
+        closeModal();
       }
     } catch (error) {
-      console.error("Review submission error:", error)
-      setErrors({ submit: "Failed to submit review. Please try again." })
-      setIsSubmitting(false)
+      console.error("Review submission error:", error);
+      setErrors({ submit: "Failed to submit review. Please try again." });
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const renderStarRating = () => {
     return [...Array(5)].map((_, index) => {
-      const ratingValue = index + 1
+      const ratingValue = index + 1;
       return (
         <div
           key={ratingValue}
@@ -72,9 +72,9 @@ function ReviewModal({ spotId }) {
         >
           <Stars filled={ratingValue <= (hover || rating)} />
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
 
   return (
     <div className="review-modal-container">
@@ -88,7 +88,7 @@ function ReviewModal({ spotId }) {
           <textarea
             id="review"
             value={comment}
-            onChange={e => setComment(e.target.value)}
+            onChange={(e) => setComment(e.target.value)}
             placeholder="Share your experience (minimum 10 characters)"
             className={`form-textarea ${errors.comment ? "input-error" : ""}`}
             rows={4}
@@ -123,7 +123,7 @@ function ReviewModal({ spotId }) {
         </div>
       </form>
     </div>
-  )
+  );
 }
 
-export default ReviewModal
+export default ReviewModal;

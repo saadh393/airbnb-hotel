@@ -10,6 +10,7 @@ import LandingPageSpots from "./components/Landingpage/Landingpage";
 import SpotDetails from "./components/Spotdetailspage/Spotdetails.jsx";
 import CreateSpotForm from "./components/CreateSpot/CreateSpotForm.jsx";
 import ManageSpots from "./components/ManageSpot/ManageSport.jsx";
+import EditForm from "./components/ManageSpot/Edit/EditForm.jsx";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <LandingPageSpots />,
+      },
+      {
+        path: "/spots/:spotId/edit",
+        element: <EditForm />,
       },
       {
         path: "/spots/:spotId",
