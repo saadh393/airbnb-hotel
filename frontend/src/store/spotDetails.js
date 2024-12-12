@@ -11,7 +11,6 @@ export const fetchSpotDetails = (id) => async (dispatch) => {
   const response = await fetch(`/api/spots/${id}`);
   if (response.ok) {
     const spot = await response.json();
-    console.log("spot", spot);
     dispatch(loadSpotDetails(spot));
     if (spot.Reviews.length > 0) {
       dispatch(bulkAddReviews(spot.Reviews));

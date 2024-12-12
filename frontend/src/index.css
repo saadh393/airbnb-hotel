@@ -67,6 +67,7 @@ button {
 .callout-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .callout button {
   background-color: var(--primary-color);
@@ -227,7 +228,6 @@ button {
 
 .reviews-title {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   font-size: 1.5em;

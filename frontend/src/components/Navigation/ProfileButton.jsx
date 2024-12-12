@@ -63,7 +63,7 @@ function ProfileButton({ user }) {
               <Link to="/manageSpots">Manage Spots</Link>
             </li>
             <li className={styles.menu}>
-              <Link to="/reviews">Reviews</Link>
+              <Link to="/manageReviews">Manage Reviews</Link>
             </li>
             <li className={styles.menu}>
               <button onClick={logout}>Log Out</button>

@@ -73,9 +73,9 @@ function SpotDetails() {
             </div>
             <span>
               {spotDetails.avgStarRating
-                ? `${spotDetails.avgStarRating}(${
+                ? `★ ${parseFloat(spotDetails.avgStarRating).toFixed(1)}  ● ${
                     spotDetails.numReviews
-                  }) ${"★".repeat(spotDetails.avgStarRating)}`
+                  } ${spotDetails.numReviews === 1 ? "Review" : "Reviews"} `
                 : "New"}
             </span>
           </div>

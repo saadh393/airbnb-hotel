@@ -6,8 +6,8 @@ export default function Stars({ filled = false }) {
       strokeWidth={1.5}
       fill={filled ? "#FFC107" : "#9e9e9e"}
       style={{
-        width: "2em",
-        height: "2em",
+        width: "1.6em",
+        height: "1.6em",
       }}
     >
       <path

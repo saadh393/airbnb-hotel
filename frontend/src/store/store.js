@@ -6,6 +6,7 @@ import spotDetailsReducer from "./spotDetails";
 import createSpotsReducer from "./createspot";
 import reviewsReducer from "./reviews";
 import manageStoreReducer from "./manageSpot";
+import manageReviewReducer from "./manageReview";
 
 const rootReducer = combineReducers({
   // ADD REDUCERS HERE
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   createSpot: createSpotsReducer,
   reviews: reviewsReducer,
   manageSpot: manageStoreReducer,
+  manageReview: manageReviewReducer,
 });
 
 let enhancer;

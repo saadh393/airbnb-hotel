@@ -4,13 +4,19 @@ import { createReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
 import Stars from "../Icons/Stars";
 import "./ReviewModal.css";
+import { updateReiview } from "../../store/manageReview";
 
-function ReviewModal({ spotId }) {
+const reviewDefault = {
+  review: "",
+  stars: 0,
+};
+
+function ReviewModal({ spotId, review = reviewDefault }) {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState(review.review ? review.review : "");
+  const [rating, setRating] = useState(review.stars ? review.stars : 0);
   const [hover, setHover] = useState(0);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +49,11 @@ function ReviewModal({ spotId }) {
         stars: rating,
       };
 
-      const response = await dispatch(createReview(spotId, reviewData));
+      const response = await dispatch(
+        review?.id
+          ? updateReiview(review.id, reviewData, spotId)
+          : createReview(spotId, reviewData)
+      );
       console.log("response from createReview:", response);
 
       if (response.errors) {
