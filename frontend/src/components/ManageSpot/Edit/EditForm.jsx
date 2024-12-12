@@ -27,7 +27,7 @@ function CreateSpotForm() {
     image4: ""
   })
 
-  const [setImagePreviews] = useState({
+  const [_, setImagePreviews] = useState({
     previewImage: "",
     image1: "",
     image2: "",
