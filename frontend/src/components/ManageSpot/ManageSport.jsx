@@ -106,7 +106,7 @@ const ManageSpots = () => {
                       : "New"}
                   </div>
                   <div className={styles.spotCardPrice}>
-                    <span>${spot?.price?.toFixed(2)}</span>
+                    <span>${spot?.price}</span>
                     <span>night</span>
                   </div>
                   <div className={styles.spotCardActions}>
