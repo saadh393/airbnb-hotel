@@ -100,13 +100,13 @@ const ManageSpots = () => {
                   </div>
                   <div className={styles.spotCardRating}>
                     {spot.avgRating
-                      ? `${spot.avgRating.toFixed(1)} ${"★".repeat(
+                      ? `${spot.avgRating?.toFixed(1)} ${"★".repeat(
                           Math.round(spot.avgRating)
                         )}`
                       : "New"}
                   </div>
                   <div className={styles.spotCardPrice}>
-                    <span>${spot.price.toFixed(2)}</span>
+                    <span>${spot.price?.toFixed(2)}</span>
                     <span>night</span>
                   </div>
                   <div className={styles.spotCardActions}>
