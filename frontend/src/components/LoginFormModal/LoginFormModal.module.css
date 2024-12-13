@@ -41,6 +41,9 @@
 .button:hover {
   background-color: #0056b3;
 }
+.button.disabled {
+  filter: brightness(0.5);
+}
 
 .loginDemo {
   width: 100%;

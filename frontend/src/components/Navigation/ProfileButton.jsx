@@ -1,45 +1,49 @@
-import styles from "./navigation.module.css";
-import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { FaUserCircle } from "react-icons/fa";
-import * as sessionActions from "../../store/session";
-import OpenModalButton from "../OpenModalButton/OpenModalButton";
-import LoginFormModal from "../LoginFormModal/LoginFormModal.jsx";
-import SignupFormModal from "../SignupFormModal/SignupFormModal.jsx";
-import { Link } from "react-router-dom";
+import styles from "./navigation.module.css"
+import { useState, useEffect, useRef } from "react"
+import { useDispatch } from "react-redux"
+import { FaUserCircle } from "react-icons/fa"
+import * as sessionActions from "../../store/session"
+import OpenModalButton from "../OpenModalButton/OpenModalButton"
+import LoginFormModal from "../LoginFormModal/LoginFormModal.jsx"
+import SignupFormModal from "../SignupFormModal/SignupFormModal.jsx"
+import { Link, NavigationType } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 function ProfileButton({ user }) {
-  const dispatch = useDispatch();
-  const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [showMenu, setShowMenu] = useState(false)
+  const ulRef = useRef()
 
-  const toggleMenu = (e) => {
-    e.stopPropagation();
-    setShowMenu(!showMenu);
-  };
+  const toggleMenu = e => {
+    e.stopPropagation()
+    setShowMenu(!showMenu)
+  }
 
   useEffect(() => {
-    if (!showMenu) return;
+    if (!showMenu) return
 
-    const closeMenu = (e) => {
+    const closeMenu = e => {
       if (!ulRef.current.contains(e.target)) {
-        setShowMenu(false);
+        setShowMenu(false)
       }
-    };
+    }
 
-    document.addEventListener("click", closeMenu);
+    document.addEventListener("click", closeMenu)
 
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
+    return () => document.removeEventListener("click", closeMenu)
+  }, [showMenu])
 
-  const logout = (e) => {
-    e.preventDefault();
-    dispatch(sessionActions.logout());
-  };
+  const logout = e => {
+    e.preventDefault()
+    dispatch(sessionActions.logout())
+    setShowMenu(false)
+    navigate("/")
+  }
 
   const ulClassName = `${styles.profileDropdown} ${
     !showMenu ? styles.hidden : ""
-  }`;
+  }`
 
   return (
     <div className={styles.profileButtonContainer}>
@@ -94,7 +98,7 @@ function ProfileButton({ user }) {
         )}
       </ul>
     </div>
-  );
+  )
 }
 
-export default ProfileButton;
+export default ProfileButton

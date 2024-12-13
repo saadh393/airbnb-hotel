@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createSpot } from "../../store/createspot";
-import styles from "./CreateSpotForm.module.css";
+import { useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { createSpot } from "../../store/createspot"
+import styles from "./CreateSpotForm.module.css"
 
 function CreateSpotForm() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const sessionUser = useSelector((state) => state.session.user);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const sessionUser = useSelector(state => state.session.user)
 
   useEffect(() => {
     if (!sessionUser) {
-      navigate("/login");
+      navigate("/login")
     }
-  }, [sessionUser, navigate]);
+  }, [sessionUser, navigate])
 
   const [formData, setFormData] = useState({
     country: "",
@@ -27,45 +27,45 @@ function CreateSpotForm() {
     image1: "",
     image2: "",
     image3: "",
-    image4: "",
-  });
+    image4: ""
+  })
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({})
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors = {}
 
-    if (!formData.country) newErrors.country = "Country is required";
+    if (!formData.country) newErrors.country = "Country is required"
     if (!formData.streetAddress)
-      newErrors.streetAddress = "Street Address is required";
-    if (!formData.city) newErrors.city = "City is required";
-    if (!formData.state) newErrors.state = "State is required";
+      newErrors.streetAddress = "Street Address is required"
+    if (!formData.city) newErrors.city = "City is required"
+    if (!formData.state) newErrors.state = "State is required"
 
     if (!formData.description || formData.description.length < 30) {
-      newErrors.description = "Description needs 30 or more characters";
+      newErrors.description = "Description needs 30 or more characters"
     }
 
-    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.name) newErrors.name = "Name is required"
 
     if (!formData.price || parseFloat(formData.price) <= 0) {
-      newErrors.price = "Price per night is required";
+      newErrors.price = "Price per night is required"
     }
 
     if (!formData.previewImage) {
-      newErrors.previewImage = "Preview Image URL is required";
+      newErrors.previewImage = "Preview Image URL is required"
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleInputChange = e => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault()
 
     if (validateForm()) {
       const result = await dispatch(
@@ -75,18 +75,18 @@ function CreateSpotForm() {
             formData.image1,
             formData.image2,
             formData.image3,
-            formData.image4,
-          ].filter(Boolean),
+            formData.image4
+          ].filter(Boolean)
         })
-      );
+      )
 
       if (result.errors) {
-        setErrors(result.errors);
+        setErrors(result.errors)
       } else {
-        navigate(`/spots/${result.id}`);
+        navigate(`/spots/${result.id}`)
       }
     }
-  };
+  }
 
   const isSubmitDisabled = () => {
     return (
@@ -98,8 +98,8 @@ function CreateSpotForm() {
       !formData.name ||
       !formData.price ||
       !formData.previewImage
-    );
-  };
+    )
+  }
 
   return (
     <form className={styles.formContainer} onSubmit={handleSubmit}>
@@ -278,7 +278,7 @@ function CreateSpotForm() {
         Create Spot
       </button>
     </form>
-  );
+  )
 }
 
-export default CreateSpotForm;
+export default CreateSpotForm

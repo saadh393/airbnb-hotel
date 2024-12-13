@@ -1,49 +1,49 @@
-import styles from "./LoginFormModal.module.css";
-import { useState } from "react";
-import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
-import { useModal } from "../../context/Modal";
+import styles from "./LoginFormModal.module.css"
+import { useState } from "react"
+import * as sessionActions from "../../store/session"
+import { useDispatch } from "react-redux"
+import { useModal } from "../../context/Modal"
 
 function LoginFormModal() {
-  const dispatch = useDispatch();
-  const [credential, setCredential] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
+  const dispatch = useDispatch()
+  const [credential, setCredential] = useState("")
+  const [password, setPassword] = useState("")
+  const [errors, setErrors] = useState({})
+  const { closeModal } = useModal()
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setErrors({});
+  const handleSubmit = e => {
+    e.preventDefault()
+    setErrors({})
     return dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
+      .catch(async res => {
+        const data = await res.json()
         if (data && data.errors) {
-          setErrors(data.errors);
+          setErrors(data.errors)
         }
-      });
-  };
+      })
+  }
 
   const handleDemoLogin = () => {
     // Use predefined demo user credentials
-    const demoCredential = "demo@user.io";
-    const demoPassword = "password";
+    const demoCredential = "demo@user.io"
+    const demoPassword = "password"
 
-    setErrors({});
+    setErrors({})
     return dispatch(
       sessionActions.login({
         credential: demoCredential,
-        password: demoPassword,
+        password: demoPassword
       })
     )
       .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
+      .catch(async res => {
+        const data = await res.json()
         if (data && data.errors) {
-          setErrors(data.errors);
+          setErrors(data.errors)
         }
-      });
-  };
+      })
+  }
 
   return (
     <>
@@ -54,7 +54,7 @@ function LoginFormModal() {
           <input
             type="text"
             value={credential}
-            onChange={(e) => setCredential(e.target.value)}
+            onChange={e => setCredential(e.target.value)}
             required
             className={styles.input}
           />
@@ -64,7 +64,7 @@ function LoginFormModal() {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             required
             className={styles.input}
           />
@@ -72,7 +72,11 @@ function LoginFormModal() {
         {errors.credential && (
           <p className={styles.error}>{errors.credential}</p>
         )}
-        <button type="submit" className={styles.button}>
+        <button
+          disabled={credential.length < 4}
+          type="submit"
+          className={styles.button}
+        >
           Log In
         </button>
       </form>
@@ -84,7 +88,7 @@ function LoginFormModal() {
         Log In as Demo
       </button>
     </>
-  );
+  )
 }
 
-export default LoginFormModal;
+export default LoginFormModal
