@@ -12,6 +12,7 @@ import CreateSpotForm from "./components/CreateSpot/CreateSpotForm.jsx";
 import ManageSpots from "./components/ManageSpot/ManageSport.jsx";
 import EditForm from "./components/ManageSpot/Edit/EditForm.jsx";
 import ManageReview from "./components/Review/ManageReview.jsx";
+import PrivateRoute from "./components/Utils/PrivateRoute.jsx";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -41,7 +42,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/spots/:spotId/edit",
-        element: <EditForm />,
+        element: (
+          <PrivateRoute>
+            <EditForm />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/spots/:spotId",
@@ -49,15 +54,27 @@ const router = createBrowserRouter([
       },
       {
         path: "/spots/new",
-        element: <CreateSpotForm />,
+        element: (
+          <PrivateRoute>
+            <CreateSpotForm />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/manageSpots",
-        element: <ManageSpots />,
+        element: (
+          <PrivateRoute>
+            <ManageSpots />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/manageReviews",
-        element: <ManageReview />,
+        element: (
+          <PrivateRoute>
+            <ManageReview />
+          </PrivateRoute>
+        ),
       },
     ],
   },

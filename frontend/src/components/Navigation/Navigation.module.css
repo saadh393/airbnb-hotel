@@ -85,9 +85,10 @@
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: 20px;
   z-index: 1000; /* Ensure dropdown appears above other elements */
+  min-width: 230px;
 }
 
 .profileDropdown li {
@@ -98,17 +99,24 @@
   margin-bottom: 0;
 }
 
-.profileDropdown button {
-  background-color: #007bff;
-  color: white;
+.profileDropdown li button {
+  color: black;
   border: none;
   border-radius: 5px;
-  padding: 5px 10px;
   cursor: pointer;
+  width: 100%;
+  text-align: left;
 }
 
 .profileDropdown button:hover {
   background-color: #0056b3;
+}
+
+.profileDropdown li a {
+  text-decoration: none;
+  width: 100%;
+  text-align: left;
+  display: block;
 }
 
 /* ============================= */

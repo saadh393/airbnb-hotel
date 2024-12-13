@@ -7,6 +7,7 @@ import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import LoginFormModal from "../LoginFormModal/LoginFormModal.jsx";
 import SignupFormModal from "../SignupFormModal/SignupFormModal.jsx";
 import { Link } from "react-router-dom";
+
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
@@ -60,10 +61,14 @@ function ProfileButton({ user }) {
               </div>
             </li>
             <li className={styles.menu}>
-              <Link to="/manageSpots">Manage Spots</Link>
+              <Link to="/manageSpots" onClick={() => setShowMenu(false)}>
+                Manage Spots
+              </Link>
             </li>
             <li className={styles.menu}>
-              <Link to="/manageReviews">Manage Reviews</Link>
+              <Link to="/manageReviews" onClick={() => setShowMenu(false)}>
+                Manage Reviews
+              </Link>
             </li>
             <li className={styles.menu}>
               <button onClick={logout}>Log Out</button>
@@ -71,14 +76,16 @@ function ProfileButton({ user }) {
           </>
         ) : (
           <>
-            <li>
+            <li className={styles.menu}>
               <OpenModalButton
+                setShowMenu={setShowMenu}
                 buttonText="Log In"
                 modalComponent={<LoginFormModal />}
               />
             </li>
-            <li>
+            <li className={styles.menu}>
               <OpenModalButton
+                setShowMenu={setShowMenu}
                 buttonText="Sign Up"
                 modalComponent={<SignupFormModal />}
               />

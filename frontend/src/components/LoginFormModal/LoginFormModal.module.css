@@ -41,3 +41,14 @@
 .button:hover {
   background-color: #0056b3;
 }
+
+.loginDemo {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #03b671;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
