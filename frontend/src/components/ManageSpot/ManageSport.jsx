@@ -8,6 +8,7 @@ const ManageSpots = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const manageSpot = useSelector((state) => state.manageSpot);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const spots = manageSpot;
@@ -60,8 +61,6 @@ const ManageSpots = () => {
   if (error) {
     return <div className={styles.errorContainer}>{error}</div>;
   }
-
-  console.log(spots);
 
   return (
     <div className={styles.manageSpotContainer}>

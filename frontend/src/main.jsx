@@ -18,7 +18,6 @@ if (import.meta.env.MODE !== "production") {
   restoreCSRF();
 
   window.csrfFetch = csrfFetch;
-  window.store = store;
   window.sessionActions = sessionActions;
 }
 if (process.env.NODE_ENV !== "production") {

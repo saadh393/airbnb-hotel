@@ -23,6 +23,7 @@ function SpotDetails() {
   if (!spotDetails || !spotDetails.SpotImages) return <div>Loading...</div>;
 
   const isOwner = sessionUser?.id === spotDetails.ownerId;
+
   const hasPostedReview = spotDetails.Reviews?.some(
     (review) => review.userId === sessionUser?.id
   );

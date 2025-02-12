@@ -77,7 +77,7 @@
 }
 
 .star {
-  color: #ff385c;
+  color: var(--primary-color);
   margin-right: 2px;
 }
 
